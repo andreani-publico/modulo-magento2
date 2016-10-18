@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <andreaniestandar>
+                <active>0</active>
+                <title>Andreani Estandar</title>
+                <description>Recibí el pedido en tu casa.</description>
+                <model>Ids\Andreani\Model\Carrier\AndreaniEstandar</model>
+            </andreaniestandar>
+            <andreanisucursal>
+                <title>Andreani Sucursal</title>
+                <description>Busca el pedido en la sucursal más cercana.</description>
+                <active>0</active>
+                <model>Ids\Andreani\Model\Carrier\AndreaniSucursal</model>
+            </andreanisucursal>
+            <andreaniurgente>
+                <title>Andreani Urgente</title>
+                <description>Recibí el pedido en tu casa en 24 hs!</description>
+                <active>0</active>
+                <model>Ids\Andreani\Model\Carrier\AndreaniUrgente</model>
+            </andreaniurgente>
+        </carriers>
+
+        <shipping>
+            <andreani_configuracion>
+                <modo>dev</modo>
+                <usuario>STAGING_WS</usuario>
+                <password backend_model="Magento\Config\Model\Config\Backend\Encrypted" >ANDREANI</password>
+                <unidad_medida>gramos</unidad_medida>
+                <peso_maximo>100000</peso_maximo>
+                <!--<metodo>basico</metodo>-->
+                <!--<cache>0</cache>-->
+                <tracking_url>http://seguimiento.andreani.com/envio</tracking_url>
+                <tipo_cotizacion>webservice</tipo_cotizacion>
+                <andreani_ws_prod_urls>
+                    <cotizacion>https://www.e-andreani.com/CASAWS/eCommerce/CotizacionEnvio.svc?wsdl</cotizacion>
+                    <cotizacion_soap_version>SOAP_1_2</cotizacion_soap_version>
+                    <trazabilidad>https://www.e-andreani.com/eAndreaniWS/Service.svc?wsdl</trazabilidad>
+                    <trazabilidad_soap_version>SOAP_1_2</trazabilidad_soap_version>
+                    <impresionconstancia>https://bpmwmbsrv.andreani.com:41443/ImposicionRemota?wsdl</impresionconstancia>
+                    <impresionconstancia_soap_version>SOAP_1_2</impresionconstancia_soap_version>
+                    <obtenerestadodistribucion>https://www.e-andreani.com/eAndreaniWS/Service.svc?wsdl</obtenerestadodistribucion>
+                    <obtenerestadodistribucion_soap_version>SOAP_1_2</obtenerestadodistribucion_soap_version>
+                    <sucursales>https://sucursales.andreani.com/ws?wsdl</sucursales>
+                    <sucursales_soap_version>SOAP_1_2</sucursales_soap_version>
+                    <confirmacioncompra>https://bpmwmbsrv.andreani.com:41443/ImposicionRemota?wsdl</confirmacioncompra>
+                    <confirmacioncompra_soap_version>SOAP_1_2</confirmacioncompra_soap_version>
+                    <generarenviosdeentregayretirocondatosdeimpresion>https://bpmwmbsrv.andreani.com:41443/DatosImpresion?wsdl</generarenviosdeentregayretirocondatosdeimpresion>
+                    <generarenviosdeentregayretirocondatosdeimpresion_soap_version>SOAP_1_1</generarenviosdeentregayretirocondatosdeimpresion_soap_version>
+                    <anularenvio>https://bpmwmbsrv.andreani.com:41443/ImposicionRemota?wsdl</anularenvio>
+                    <anularenvio_soap_version>SOAP_1_2</anularenvio_soap_version></andreani_ws_prod_urls>
+                <andreani_ws_dev_urls>
+                    <cotizacion>https://cotizadorpreprod.andreani.com/ws?wsdl</cotizacion>
+                    <cotizacion_soap_version>SOAP_1_2</cotizacion_soap_version>
+                    <trazabilidad>https://www.e-andreani.com/eAndreaniWSStaging/Service.svc?wsdl</trazabilidad>
+                    <trazabilidad_soap_version>SOAP_1_2</trazabilidad_soap_version>
+                    <impresionconstancia>https://www.e-andreani.com/CASAStaging/eCommerce/ImposicionRemota.svc?wsdl</impresionconstancia>
+                    <impresionconstancia_soap_version>SOAP_1_2</impresionconstancia_soap_version>
+                    <obtenerestadodistribucion>https://www.e-andreani.com/eAndreaniWSStaging/Service.svc?wsdl</obtenerestadodistribucion>
+                    <obtenerestadodistribucion_soap_version>SOAP_1_2</obtenerestadodistribucion_soap_version>
+                    <sucursales>https://sucursalespreprod.andreani.com/ws?wsdl</sucursales>
+                    <sucursales_soap_version>SOAP_1_2</sucursales_soap_version>
+                    <confirmacioncompra_soap_version>SOAP_1_2</confirmacioncompra_soap_version>
+                    <confirmacioncompra>https://www.e-andreani.com/CASAStaging/eCommerce/ImposicionRemota.svc?wsdl</confirmacioncompra>
+                    <generarenviosdeentregayretirocondatosdeimpresion>https://bpmwmbsrvtest.andreani.com:7084/Ecommerce/DatosImpresion?wsdl</generarenviosdeentregayretirocondatosdeimpresion>
+                    <generarenviosdeentregayretirocondatosdeimpresion_soap_version>SOAP_1_1</generarenviosdeentregayretirocondatosdeimpresion_soap_version>
+                    <anularenvio>https://www.e-andreani.com/CASAStaging/eCommerce/ImposicionRemota.svc?wsdl</anularenvio>
+                    <anularenvio_soap_version>SOAP_1_2</anularenvio_soap_version>
+                </andreani_ws_dev_urls>
+            </andreani_configuracion>
+        </shipping>
+    </default>
+</config>

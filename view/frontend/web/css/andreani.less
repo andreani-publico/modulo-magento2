@@ -1,0 +1,14 @@
+@loader-bg-color: rgba(239,239,239, 0.9);
+
+.andreani-loader {
+    background-image: url('../images/loader.gif');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: @loader-bg-color;
+    z-index: 99;
+}
+
+.andreani-loader * {
+  opacity: 0.4;
+  pointer-events: none;
+}

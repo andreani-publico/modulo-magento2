@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ids_Andreani::css/andreani.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Ids\Andreani\Block\Andreani" name="ids_andreani_head" template="head.phtml" cacheable="false" />
+        </referenceContainer>
+
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="shipping-step" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="shippingAddress" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="shipping-address-fieldset" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+
+
+                                                                <item name="celular" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="customScope" xsi:type="string">customCheckoutForm</item>
+                                                                        <item name="template" xsi:type="string">ui/form/field</item>
+                                                                        <item name="elementTmpl" xsi:type="string">ui/form/element/input</item>
+                                                                    </item>
+                                                                    <item name="provider" xsi:type="string">checkoutProvider</item>
+                                                                    <item name="dataScope" xsi:type="string">customCheckoutForm.celular</item>
+                                                                    <item name="label" xsi:type="string">Celular</item>
+                                                                    <item name="sortOrder" xsi:type="string">200</item>
+                                                                </item>
+                                                                <item name="altura" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="customScope" xsi:type="string">customCheckoutForm</item>
+                                                                        <item name="template" xsi:type="string">ui/form/field</item>
+                                                                        <item name="elementTmpl" xsi:type="string">ui/form/element/input</item>
+                                                                    </item>
+                                                                    <item name="provider" xsi:type="string">checkoutProvider</item>
+                                                                    <item name="dataScope" xsi:type="string">customCheckoutForm.altura</item>
+                                                                    <item name="label" xsi:type="string">Altura</item>
+                                                                    <item name="sortOrder" xsi:type="string">70</item>
+                                                                    <item name="validation" xsi:type="array">
+                                                                        <item name="required-entry" xsi:type="string">true</item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="piso" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="customScope" xsi:type="string">customCheckoutForm</item>
+                                                                        <item name="template" xsi:type="string">ui/form/field</item>
+                                                                        <item name="elementTmpl" xsi:type="string">ui/form/element/input</item>
+                                                                    </item>
+                                                                    <item name="provider" xsi:type="string">checkoutProvider</item>
+                                                                    <item name="dataScope" xsi:type="string">customCheckoutForm.piso</item>
+                                                                    <item name="label" xsi:type="string">Piso</item>
+                                                                    <item name="sortOrder" xsi:type="string">71</item>
+                                                                </item>
+                                                                <item name="departamento" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="customScope" xsi:type="string">customCheckoutForm</item>
+                                                                        <item name="template" xsi:type="string">ui/form/field</item>
+                                                                        <item name="elementTmpl" xsi:type="string">ui/form/element/input</item>
+                                                                    </item>
+                                                                    <item name="provider" xsi:type="string">checkoutProvider</item>
+                                                                    <item name="dataScope" xsi:type="string">customCheckoutForm.departamento</item>
+                                                                    <item name="label" xsi:type="string">Departamento</item>
+                                                                    <item name="sortOrder" xsi:type="string">72</item>
+                                                                </item>
+                                                                <item name="dni" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="customScope" xsi:type="string">customCheckoutForm</item>
+                                                                        <item name="template" xsi:type="string">ui/form/field</item>
+                                                                        <item name="elementTmpl" xsi:type="string">ui/form/element/input</item>
+                                                                    </item>
+                                                                    <item name="provider" xsi:type="string">checkoutProvider</item>
+                                                                    <item name="dataScope" xsi:type="string">customCheckoutForm.dni</item>
+                                                                    <item name="label" xsi:type="string">DNI</item>
+                                                                    <item name="sortOrder" xsi:type="string">52</item>
+                                                                    <item name="validation" xsi:type="array">
+                                                                        <item name="required-entry" xsi:type="string">true</item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="observaciones" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="customScope" xsi:type="string">customCheckoutForm</item>
+                                                                        <item name="template" xsi:type="string">ui/form/field</item>
+                                                                        <item name="elementTmpl" xsi:type="string">ui/form/element/textarea</item>
+                                                                        <item name="cols" xsi:type="string">15</item>
+                                                                        <item name="rows" xsi:type="string">3</item>
+                                                                    </item>
+                                                                    <item name="provider" xsi:type="string">checkoutProvider</item>
+                                                                    <item name="dataScope" xsi:type="string">customCheckoutForm.observaciones</item>
+                                                                    <item name="label" xsi:type="string">Observaciones</item>
+                                                                    <item name="sortOrder" xsi:type="string">201</item>
+                                                                </item>
+
+
+
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+
+                                                <item name="step-config" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="shipping-rates-validation" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="andreani-estandar-rates-validation" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Ids_Andreani/js/view/estandar/shipping-rates-validation</item>
+                                                                </item>
+                                                                <item name="andreani-urgente-rates-validation" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Ids_Andreani/js/view/urgente/shipping-rates-validation</item>
+                                                                </item>
+                                                                <item name="andreani-sucursal-rates-validation" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Ids_Andreani/js/view/sucursal/shipping-rates-validation</item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

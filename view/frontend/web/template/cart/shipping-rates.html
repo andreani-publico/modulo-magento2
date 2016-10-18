@@ -1,0 +1,79 @@
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<form id="co-shipping-method-form" data-bind="blockLoader: isLoading, visible: isVisible()">
+    <p class="field note" data-bind="visible: (shippingRates().length <= 0)">
+        <!-- ko text: $t('Sorry, no quotes are available for this order at this time')--><!-- /ko -->
+    </p>
+    <fieldset class="fieldset rate" data-bind="visible: (shippingRates().length > 0)">
+        <dl class="items methods" data-bind="foreach: shippingRateGroups">
+            <dt class="item-title"><span data-bind="text: $data"></span></dt>
+            <dd class="item-options" data-bind="foreach: $parent.getRatesForGroup($data)">
+                <div data-bind="css: {'field choice item': available, 'message error': !available} ">
+                    <!-- ko ifnot: (available) -->
+                    <div data-bind="text: error_message"></div>
+                    <!-- /ko -->
+                    <!-- ko if: (available) -->
+                        <!-- ko if: ($data.carrier_code == 'andreanisucursal') -->
+                            <select id="andreanisucursal-provincia" data-bind="options: $parents[1].provinciasDisponibles, optionsText: 'nombre',
+                                                optionsValue: 'provincia_id', value: $parents[1].provinciaSeleccionada, optionsCaption: 'Seleccione una provincia',
+                                                event:{change:$parents[1].getLocalidades}" style="margin-bottom: 25px">
+                            </select>
+
+                            <select id="andreanisucursal-localidad" data-bind="options: $parents[1].localidadesDisponibles,optionsText: 'localidad',
+                                                optionsValue: 'codigo_postal_id',value: $parents[1].localidadSeleccionada, optionsCaption: 'Seleccione una localidad',
+                                                event:{change:$parents[1].getSucursales}" style="margin-bottom: 25px;display:none;" >
+                            </select>
+
+                            <select id="andreanisucursal-sucursal" data-bind="options: $parents[1].sucursalesAndreaniDisponibles, optionsValue: 'Sucursal',
+                                               optionsText: 'Direccion', value: $parents[1].sucursalAndreaniSeleccionada, optionsCaption: 'Seleccione una sucursal de retiro',
+                                               event:{change:$parents[1].cotizacionAndreaniSucursal}"  style="margin-bottom: 25px;display:none;">
+                            </select>
+                            <!-- , attr:{'data-sucursal-id':''} -->
+                            <div class="localidad-sin-sucursales" style="display: none">
+                                <p>No se encontraron sucursales Andreani en la localidad seleccionada.</p>
+                            </div>
+
+                            <div id="andreanisucursal-price" style="display: none">
+                                <input type="radio"
+                                       class="radio"
+                                       data-bind="
+                                        click: $parents[1].selectShippingMethod,
+                                        attr: {
+                                                value: carrier_code + '_' + method_code,
+                                                id: 's_method_' + method_code
+                                                }
+                                        "/>
+                                <label class="label" data-bind="attr: {for: 's_method_' + method_code}">
+                                    <span class="price"></span>
+                                </label>
+
+                            </div>
+                        <!-- /ko -->
+                        <!-- ko ifnot: ($data.carrier_code == 'andreanisucursal') -->
+                            <input type="radio"
+                                   class="radio"
+                                   data-bind="
+                                        click: $parents[1].selectShippingMethod,
+                                        checked: $parents[1].selectedShippingMethod,
+                                        attr: {
+                                                value: carrier_code + '_' + method_code,
+                                                id: 's_method_' + method_code
+                                                }
+                                        "/>
+                            <label class="label" data-bind="attr: {for: 's_method_' + method_code}">
+                                <!-- ko text: $data.method_title --><!-- /ko -->
+                                <!-- ko text: $parents[1].getFormattedPrice(amount) --><!-- /ko -->
+                            </label>
+                        <!-- /ko -->
+
+                    <!-- /ko -->
+
+                </div>
+            </dd>
+        </dl>
+    </fieldset>
+</form>
