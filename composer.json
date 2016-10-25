@@ -1,0 +1,12 @@
+{
+    "name": "andreani/magento2",
+    "description": "Módulo de Andreani para Magento 2",
+    "type": "library",
+    "license": "Unlicense",
+    "autoload": {
+        "psr-0": {"Andreani": "src"}
+    },
+    "require": {
+        "h4cc/wkhtmltopdf-i386": "0.12.3"
+    }
+}
