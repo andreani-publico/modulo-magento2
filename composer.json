@@ -3,10 +3,11 @@
     "description": "Módulo de Andreani para Magento 2",
     "type": "library",
     "license": "Unlicense",
+    "version": "1.0.0",
     "autoload": {
         "psr-0": {"Andreani": "src"}
     },
     "require": {
         "h4cc/wkhtmltopdf-i386": "0.12.3"
-    }
+    },
 }
