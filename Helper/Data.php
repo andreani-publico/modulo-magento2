@@ -10,6 +10,7 @@
 
 namespace Ids\Andreani\Helper;
 
+ini_set('max_execution_time',3000);
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Checkout\Model\Cart;
@@ -18,7 +19,9 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Sales\Model\Order;
-
+use Magento\Sales\Model\Order\Shipment;
+use HTML2PDF;
+use HTML2PDF_exception as Html2PdfException;
 
 class Data extends AbstractHelper
 {
@@ -44,7 +47,6 @@ class Data extends AbstractHelper
      * @var ScopeConfigInterface
      */
     protected $_scopeConfig;
-    
 
     /**
      * @var \Magento\Framework\Registry
@@ -81,17 +83,21 @@ class Data extends AbstractHelper
      */
     protected $_storeManagerInterface;
 
+    /**
+     * @var Order
+     */
+    protected $_order;
 
     /**
      * @var Shipment
      */
-    protected $_order;
-
+    protected $_orderShipment;
 
     /**
      * @var ProductLoader
      */
     protected $_productloader;
+
     /**
      * Data constructor.
      * @param Session $checkoutSession
@@ -107,7 +113,8 @@ class Data extends AbstractHelper
         DirectoryList $directoryList,
         StoreManagerInterface $storeManagerInterface,
         ProductFactory $productFactory,
-        Order $order
+        Order $order,
+        Shipment $shipment
     ) {
         $this->_checkoutSession         = $checkoutSession;
         $this->_cart                    = $cart;
@@ -116,7 +123,7 @@ class Data extends AbstractHelper
         $this->_storeManagerInterface   = $storeManagerInterface;
         $this->_productloader           = $productFactory;
         $this->_order                   = $order;
-        //parent::__construct($context);
+        $this->_orderShipment           = $shipment;
     }
 
     /**
@@ -127,6 +134,7 @@ class Data extends AbstractHelper
     {
         return $this->_scopeConfig->getValue('shipping/andreani_configuracion/usuario');
     }
+
     /**
      * @description devuelve el número de cliente que se configuró por admin.
      * @return mixed
@@ -164,6 +172,14 @@ class Data extends AbstractHelper
     }
 
     /**
+     * @return mixed
+     */
+    public function getDebugHabilitado()
+    {
+        return $this->_scopeConfig->getValue('shipping/andreani_configuracion/log_generacion_guias');
+    }
+
+    /**
      * @description determina si está activa o no la caché de sucursales optimizada que se configuró por admin.
      * @return mixed
      */
@@ -180,26 +196,53 @@ class Data extends AbstractHelper
     {
         $storeUrl           = $this->_storeManagerInterface->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
         $logoEmpresa        = $this->_scopeConfig->getValue('shipping/andreani_configuracion/upload_image');
-        $logoEmpresaPath    = $storeUrl.'andreani/logo_empresa/'.$logoEmpresa;
-        return $logoEmpresaPath ;
+        if($logoEmpresa!='')
+        {
+            $logoEmpresaPath    = $storeUrl.'andreani/logo_empresa/'.$logoEmpresa;
+            return $logoEmpresaPath ;
+        }
+        else
+        {
+            return false;
+        }
     }
 
+    /**
+     * @param $filename
+     * @return string
+     */
+    public function getGuiaPdfPath($filename)
+    {
+        $storeUrl           = $this->_storeManagerInterface->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+        $guiaPdfPath        = $storeUrl.'andreani/'.$filename.'.pdf';
+        return $guiaPdfPath ;
+    }
+
+    /**
+     * @param $numeroAndreani
+     * @return string
+     */
     public function getCodigoBarras($numeroAndreani)
     {
-        return $this->_storeManagerInterface->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA)."/andreani/{$numeroAndreani}.png";
-        
+        return $this->_storeManagerInterface->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA)."andreani/{$numeroAndreani}.png";
+
     }
+
     /**
-     * @description apartir de la interface devuele la dirección de la url de la tienda.
-     * @param $type
+     * @description a partir de la interface devuele la dirección de la url de la tienda.
+     * @param $path
+     * @param $params
      * @return mixed
+     * @internal param $type
      */
     public function getStoreUrl($path,$params)
     {
         return $this->_storeManagerInterface->getStore()->getUrl($path,$params);
-//        return $this->_storeManagerInterface->getStore()->getBaseUrl();
     }
 
+    /**
+     * @return mixed
+     */
     public function getStoreManagerInterface()
     {
         return $this->_storeManagerInterface->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
@@ -263,6 +306,24 @@ class Data extends AbstractHelper
     }
 
     /**
+     * @description Obtiene la configuración del modo de generación de la guía.
+     * @return mixed
+     */
+    public function getGeneracionGuiasConfig()
+    {
+        return $this->_scopeConfig->getValue('shipping/andreani_configuracion/generacion_guia');
+    }
+
+    /**
+     * @description Obtiene la configuración del tiempo de almacenamiento de guías.
+     * @return mixed
+     */
+    public function getAlmacenamientoGuiasConfig()
+    {
+        return $this->_scopeConfig->getValue('shipping/andreani_configuracion/almacenamiento_guias');
+    }
+
+    /**
      * @description devuelve el objeto del "quote" que está en sesión.
      * @return Quote
      */
@@ -295,7 +356,47 @@ class Data extends AbstractHelper
         $logger->info($mensaje);
     }
 
-   
+    /**
+     * @description devuelve los mails transaccionales configurados en el sitio.
+     * @return array
+     */
+    public function getTransEmails($type=null)
+    {
+        $transEmails = [];
+
+        $transEmails['contact_general'] = [
+            'name'=> $this->_scopeConfig->getValue('trans_email/ident_general/name'),
+            'email'=> $this->_scopeConfig->getValue('trans_email/ident_general/email')
+
+        ];
+
+        $transEmails['representante_ventas'] = [
+            'name'=> $this->_scopeConfig->getValue('trans_email/ident_sales/name'),
+            'email'=> $this->_scopeConfig->getValue('trans_email/ident_sales/email')
+
+        ];
+
+        $transEmails['atencion_cliente'] = [
+            'name'=> $this->_scopeConfig->getValue('trans_email/ident_support/name'),
+            'email'=> $this->_scopeConfig->getValue('trans_email/ident_support/email')
+
+        ];
+
+        if($type)
+        {
+            if($type=='andreani')
+            {
+                $andreaniTransEmail = $this->_scopeConfig->getValue('shipping/andreani_configuracion/andreani_trans_emails');
+                $transEmails = $transEmails[$andreaniTransEmail];
+            }
+            else
+            {
+                $transEmails = $transEmails[$type];
+            }
+        }
+        return $transEmails;
+    }
+
     /**
      * @description Método que espera un parámetro con el método que definirá la url a traer para el
      * WS; además, es posible pasarle el ambiente (testing o prod) para que traiga la url correspondiente.
@@ -305,7 +406,6 @@ class Data extends AbstractHelper
      */
     public function getWSMethodUrl($method,$enviroment=null)
     {
-
         if($enviroment == self::ENVMODPROD)
         {
             $configField = 'shipping/andreani_configuracion/andreani_ws_prod_urls/';
@@ -345,7 +445,6 @@ class Data extends AbstractHelper
         }
 
         return $url;
-
     }
 
     /**
@@ -384,31 +483,38 @@ class Data extends AbstractHelper
         {
             return $this->_directoryList->getRoot();
         }
-        
     }
+
 
     /**
      * @description recibe el número de andreani y crea el código de barras a partir del texto.
      * @param $text
      */
-    public function crearCodigoDeBarras($text) {
+    public function crearCodigoDeBarras($text)
+    {
         $text = strtoupper($text);
         $code_string = "";
         $chksum = 103;
         $code_array = array(" " => "212222", "!" => "222122", "\"" => "222221", "#" => "121223", "$" => "121322", "%" => "131222", "&" => "122213", "'" => "122312", "(" => "132212", ")" => "221213", "*" => "221312", "+" => "231212", "," => "112232", "-" => "122132", "." => "122231", "/" => "113222", "0" => "123122", "1" => "123221", "2" => "223211", "3" => "221132", "4" => "221231", "5" => "213212", "6" => "223112", "7" => "312131", "8" => "311222", "9" => "321122", ":" => "321221", ";" => "312212", "<" => "322112", "=" => "322211", ">" => "212123", "?" => "212321", "@" => "232121", "A" => "111323", "B" => "131123", "C" => "131321", "D" => "112313", "E" => "132113", "F" => "132311", "G" => "211313", "H" => "231113", "I" => "231311", "J" => "112133", "K" => "112331", "L" => "132131", "M" => "113123", "N" => "113321", "O" => "133121", "P" => "313121", "Q" => "211331", "R" => "231131", "S" => "213113", "T" => "213311", "U" => "213131", "V" => "311123", "W" => "311321", "X" => "331121", "Y" => "312113", "Z" => "312311", "[" => "332111", "\\" => "314111", "]" => "221411", "^" => "431111", "_" => "111224", "NUL" => "111422", "SOH" => "121124", "STX" => "121421", "ETX" => "141122", "EOT" => "141221", "ENQ" => "112214", "ACK" => "112412", "BEL" => "122114", "BS" => "122411", "HT" => "142112", "LF" => "142211", "VT" => "241211", "FF" => "221114", "CR" => "413111", "SO" => "241112", "SI" => "134111", "DLE" => "111242", "DC1" => "121142", "DC2" => "121241", "DC3" => "114212", "DC4" => "124112", "NAK" => "124211", "SYN" => "411212", "ETB" => "421112", "CAN" => "421211", "EM" => "212141", "SUB" => "214121", "ESC" => "412121", "FS" => "111143", "GS" => "111341", "RS" => "131141", "US" => "114113", "FNC 3" => "114311", "FNC 2" => "411113", "SHIFT" => "411311", "CODE C" => "113141", "CODE B" => "114131", "FNC 4" => "311141", "FNC 1" => "411131", "Start A" => "211412", "Start B" => "211214", "Start C" => "211232", "Stop" => "2331112");
         $code_keys = array_keys($code_array);
         $code_values = array_flip($code_keys);
-        for ($x = 1; $x <= strlen($text); $x++) {
+
+        for ($x = 1; $x <= strlen($text); $x++)
+        {
             $activeKey = substr($text, ($x - 1), 1);
             $code_string .= $code_array[$activeKey];
             $chksum = ($chksum + ($code_values[$activeKey] * $x));
         }
+
         $code_string .= $code_array[$code_keys[($chksum - (intval($chksum / 103) * 103))]];
         $code_string = "211412" . $code_string . "2331112";
         $code_length = 20;
-        for ($i = 1; $i <= strlen($code_string); $i++) {
+
+        for ($i = 1; $i <= strlen($code_string); $i++)
+        {
             $code_length = $code_length + (integer) (substr($code_string, ($i - 1), 1));
         }
+
         $img_width = $code_length;
         $img_height = 100;
         $image = imagecreate($img_width, $img_height);
@@ -416,14 +522,17 @@ class Data extends AbstractHelper
         $white = imagecolorallocate($image, 255, 255, 255);
         imagefill($image, 0, 0, $white);
         $location = 10;
-        for ($position = 1; $position <= strlen($code_string); $position++) {
+
+        for ($position = 1; $position <= strlen($code_string); $position++)
+        {
             $cur_size = $location + ( substr($code_string, ($position - 1), 1) );
             imagefilledrectangle($image, $location, 0, $cur_size, $img_height, ($position % 2 == 0 ? $white : $black));
             $location = $cur_size;
         }
 
         $filePath 		= $this->getDirectoryPath('media')."/andreani/";
-        if (!file_exists($filePath) || !is_dir($filePath)) {
+        if (!file_exists($filePath) || !is_dir($filePath))
+        {
             mkdir("{$filePath}", 0777,true);
         }
 
@@ -434,22 +543,38 @@ class Data extends AbstractHelper
     }
 
     /**
-     * @description método encargado de generar la guía de Andreani pasando los parámetros que
-     * necesita la librería para armar el PDF.
+     * @description Método que se encarga de generar el pdf con la guía.
      * @param $pdfName
-     * @param $urlHtml
-     * @return string
+     * @param $html
+     * @param $action
+     * @return bool|\Exception|Html2PdfException
      */
-    public function generatePdfFile($pdfName,$urlHtml)
+    public function generateHtml2Pdf($pdfName,$html,$action)
     {
-        $pathWkhtmlToX 	= $this->getDirectoryPath().'/vendor/bin/wkhtmltopdf-i386';
-        $filePath 		= $this->getDirectoryPath('media')."/andreani/";
-        if (!file_exists($filePath) || !is_dir($filePath)) {
-            mkdir("{$filePath}", 0777,true);
+        try{
+            $filePath = $this->getDirectoryPath('media')."/andreani/";
+            if (!file_exists($filePath) || !is_dir($filePath)) {
+                mkdir("{$filePath}", 0777,true);
+            }
+
+            $pdf = new Html2Pdf('P', 'A4', 'en', true,'UTF-8', array(0, 0, 0, 0));
+            $pdf->setDefaultFont('Helvetica');
+            $pdf-> WriteHTML($html);
+
+            if($action == 'D')
+            {
+                $pdf->Output($pdfName.'.pdf', $action);
+            }
+            else
+            {
+                $pdf->Output($filePath.$pdfName.'.pdf', $action);
+            }
+            return true;
+
+        }catch (Html2PdfException $e) {
+            $this->log($e,'generateHtml2Pdf_error.log');
+            return false;
         }
-        $file 			= $filePath."{$pdfName}.pdf";
-        exec("{$pathWkhtmlToX} {$urlHtml} {$file}");
-        return $file;
     }
 
     /**
@@ -520,6 +645,17 @@ class Data extends AbstractHelper
     public function getLoadShipmentOrder($orderId)
     {
         return $this->_order->load($orderId);
+    }
+
+    /**
+     * @description Carga por increment_id, el objeto correspondiente
+     * a esa orden.
+     * @param $incrementId
+     * @return $this
+     */
+    public function loadByIncrementId($incrementId)
+    {
+        return $this->_orderShipment->loadByIncrementId($incrementId);
     }
 
     /**

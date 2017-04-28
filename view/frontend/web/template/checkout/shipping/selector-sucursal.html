@@ -29,7 +29,7 @@
     </td>
 
     <td class="col col-method"
-        data-bind="attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}">Busca el pedido en la sucursal más cercana.</td> <!-- text: method.method_title -->
+        data-bind="attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}">Busca el pedido en la sucursal m&aacute;s cercana.</td> <!-- text: method.method_title -->
 
     <td class="col col-carrier"
         data-bind="text: method.carrier_title, attr: {'id': 'label_carrier_' + method.method_code + '_' + method.carrier_code}"></td>
@@ -52,13 +52,8 @@
            optionsText: 'Direccion', value: $parent.sucursalAndreaniSeleccionada, optionsCaption: 'Seleccione una sucursal de retiro',
            event:{change:$parent.cotizacionAndreaniSucursal()}"  style="margin-bottom: 25px">
         </select>
-        <!-- , attr:{'data-sucursal-id':''} -->
         <div class="localidad-sin-sucursales" style="display: none">
             <p>No se encontraron sucursales Andreani en la localidad seleccionada.</p>
         </div>
-
-        <!-- El boton de aplicar tiene que hacer que se actualice en el carrito el precio del envio de sucursal y
-        se pase al proximo paso. Hay que ver la forma de hacer esto... -->
-        <!--<button data-bind="event:{change:$parent.aplicarSucursalAndreani()}">Aplicar</button>-->
     </td>
 </tr>

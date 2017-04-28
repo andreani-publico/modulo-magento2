@@ -57,5 +57,26 @@
                 <aspect name="to_quote_address" />
             </field>
         </fieldset>
+        <fieldset id="order_address">
+            <field name="dni">
+                <aspect name="to_customer"/>
+                <aspect name="to_customer_address"/>
+            </field>
+            <field name="altura">
+                <aspect name="to_customer_address"/>
+            </field>
+            <field name="piso">
+                <aspect name="to_customer_address"/>
+            </field>
+            <field name="departamento">
+                <aspect name="to_customer_address"/>
+            </field>
+            <field name="celular">
+                <aspect name="to_customer_address"/>
+            </field>
+            <field name="observaciones">
+                <aspect name="to_customer_address"/>
+            </field>
+        </fieldset>
     </scope>
 </config>

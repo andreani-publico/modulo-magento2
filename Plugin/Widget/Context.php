@@ -5,7 +5,7 @@ use Magento\Backend\Block\Widget\Context AS Subject;
 use Magento\Framework\App\ObjectManager;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Sales\Model\Order;
-
+use Magento\Framework\Url;
 
 /**
  * Class Context
@@ -25,15 +25,33 @@ class Context
      */
     protected $_order;
 
+    /**
+     * @var Url
+     */
+    protected $_frontendUrl;
 
+    /**
+     * Context constructor.
+     * @param StoreManagerInterface $storeManagerInterface
+     * @param Order $order
+     * @param Url $frontendUrl
+     */
     public function __construct(
         StoreManagerInterface $storeManagerInterface,
-        Order $order
+        Order $order,
+        Url $frontendUrl
     )
     {
         $this->_storeManagerInterface  = $storeManagerInterface;
         $this->_order                  = $order;
+        $this->_frontendUrl            = $frontendUrl;
     }
+
+    /**
+     * @param Subject $subject
+     * @param $buttonList
+     * @return mixed
+     */
     public function afterGetButtonList(
         Subject $subject,
         $buttonList
@@ -59,10 +77,7 @@ class Context
             }
         }
 
-
-        //Valida que el controller esté en la vista de la orden y, que además, haya datos guardados
-        //en el campo "andreani_datos_guia".
-        $baseUrl = $this->_storeManagerInterface->getStore()->getUrl('andreani/generarguia/index',['order_id' =>$orderId]);
+        $baseUrl = $this->_frontendUrl->getUrl('andreani/generarguia/index',['order_id' =>$orderId,'rk'=>uniqid()]);
 
         if($subject->getRequest()->getFullActionName() == 'sales_order_view' && $andreaniDatosGuia){
             $buttonList->add(

@@ -8,4 +8,12 @@
         <attribute code="celular" type="string"/>
         <attribute code="observaciones" type="string"/>
     </extension_attributes>
+    <extension_attributes for="Magento\Quote\Api\Data\AddressInterface">
+        <attribute code="altura" type="string"/>
+        <attribute code="piso" type="string"/>
+        <attribute code="departamento" type="string"/>
+        <attribute code="celular" type="string"/>
+        <attribute code="observaciones" type="string"/>
+        <attribute code="dni" type="string"/>
+    </extension_attributes>
 </config>

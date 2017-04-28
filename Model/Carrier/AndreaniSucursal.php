@@ -61,6 +61,11 @@ class AndreaniSucursal extends AbstractCarrierOnline implements CarrierInterface
     protected $_carrierParams;
 
     /**
+     * @var Result
+     */
+    protected $_result;
+
+    /**
      * AndreaniSucursal constructor.
      * @param ScopeConfigInterface $scopeConfig
      * @param ErrorFactory $rateErrorFactory
@@ -164,12 +169,29 @@ class AndreaniSucursal extends AbstractCarrierOnline implements CarrierInterface
         $method->setCarrierTitle($this->getConfigData('title'));
         $method->setMethod('sucursal');
 
+        $pesoTotal  = $request->getPackageWeight() * 1000;
+
+        if($pesoTotal > (int)$helper->getPesoMaximo())
+        {
+            $error = $this->_rateErrorFactory->create();
+            $error->setCarrier($this->_code);
+            $error->setCarrierTitle($this->getConfigData('title'));
+            $error->setErrorMessage(__('Su pedido supera el peso máximo permitido por Andreani. Por favor divida su orden en más pedidos o consulte al administrador de la tienda.'));
+
+            return $error;
+        }
+
         /**
          * Cuando selecciono el metodo de envio y le doy al boton siguiente en el checkout, vuelve a pasar por aca para
          * recargar actualizar el quote. Hay que buscar la manera de que le llegue un parametro con la cotizacion
          *
          */
         $checkoutSession = $this->_checkoutSession;
+
+        if($request->getFreeShipping() === true)
+            $checkoutSession->setFreeShipping(true);
+        else
+            $checkoutSession->setFreeShipping(false);
 
         if($nombreSucursal = $checkoutSession->getNombreAndreaniSucursal())
         {
@@ -256,6 +278,7 @@ class AndreaniSucursal extends AbstractCarrierOnline implements CarrierInterface
         $carrierParams['idcliente']                     = '';
         $carrierParams['sucursalderetiro']              = $order->getCodigoSucursalAndreani()? $order->getCodigoSucursalAndreani() : '';
         $carrierParams['sucursaldelcliente']            = '';
+        $carrierParams['increment_id']                  = $order->getIncrementId();
 
         $dataGuia = $webservice->GenerarEnviosDeEntregaYRetiroConDatosDeImpresion($carrierParams,$this->_code);
         $response = [];
@@ -381,26 +404,50 @@ class AndreaniSucursal extends AbstractCarrierOnline implements CarrierInterface
             $trackings = [$trackings];
         }
 
+        $this->_getAndreaniTracking($trackings);
         return $this->_result;
     }
+
+
 
     /**
      * @param $tracking
      * @return mixed
      */
-    protected function _getAndreaniTracking($tracking)
+    protected function _getAndreaniTracking($trackings)
     {
         $result = $this->_trackFactory->create();
-        $status = $this->_trackStatusFactory->create();
-        $status->setCarrier($this->_code);
-        $status->setCarrierTitle($this->getConfigData('title'));
-        $status->setTracking($tracking);
-        $status->setPopup(1);
-        $status->setUrl($this->_andreaniHelper->getTrackingUrl($tracking));
-        $result->append($status);
+
+        if(is_array($trackings))
+        {
+            foreach ($trackings as $tracking) {
+                $status = $this->_trackStatusFactory->create();
+                $status->setCarrier($this->getCarrierCode());
+                $status->setCarrierTitle($this->getConfigData('title'));
+                $status->setTracking($tracking);
+                $status->setPopup(1);
+                $status->setUrl(
+                    $this->_andreaniHelper->getTrackingUrl($tracking)
+                );
+                $result->append($status);
+            }
+        }
+        elseif(is_string($trackings))
+        {
+            $status = $this->_trackStatusFactory->create();
+            $status->setCarrier($this->getCarrierCode());
+            $status->setCarrierTitle($this->getConfigData('title'));
+            $status->setTracking($trackings);
+            $status->setPopup(1);
+            $status->setUrl(
+                $this->_andreaniHelper->getTrackingUrl($trackings)
+            );
+            $result->append($status);
+        }
+
         $this->_result = $result;
 
-        return $result;
+        return $this->_result;
     }
 
 }

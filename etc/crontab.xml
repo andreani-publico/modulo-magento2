@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="andreani_cron">
+        <job name="andreani_borrarpdf" instance="Ids\Andreani\Cron\BorrarPdf" method="execute">
+            <schedule>0 0 1 * *</schedule>
+        </job>
+    </group>
+</config>

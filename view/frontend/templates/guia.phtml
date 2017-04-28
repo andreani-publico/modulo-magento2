@@ -50,503 +50,412 @@ foreach($blockData AS $key => $guiaData):
 <?php endif; ?>
     <?php if($andreaniDatosGuia->CodigoDeResultado): ?>
 
-    <style>
-        @import url(http://fonts.googleapis.com/css?family=Roboto:900,100,300,400,500,700);
-        @font-face {
-            font-family: mrvcode128ama;
-            src: url(mrvcode128ama.ttf);
-        }
-        *{box-sizing: border-box;}
-        body {
+    <style type="text/css">
+
+        page {
             width: 210mm;
             height: 297mm;
-            margin: 5mm auto;
-            position:relative;
             color: #000;
-            background: #fff;
-            font-family: Roboto, Helvetica, sans-serif;
-            font-weight: 300;
-            -webkit-print-color-adjust:exact;
+            font-family: Helvetica, sans-serif;
+            font-size: 3mm;
+            line-height: 4mm;
+            padding:150mm;
         }
-
-        .banner{
-            background-color: #000;
-            color: #595959;
-            height: 15mm;
-            position:relative;
+        p {
+            font-size: 3mm;
+            line-height: 4mm;
         }
-
-        .footer,footer,.copyright{
-            display: none !important;
-        }
-
-        h2{
-            float: right!important;
-            margin: 3mm 6mm!important;
-            letter-spacing: 0.03em!important;
-            font-style: normal!important;
-        }
-
-        .title-right-first{
-            float: right;
-            height: 0;
-            width: 90mm;
-            height: 14.9mm;
-            width: 110mm;
-            background: #eee;
-            box-sizing: border-box;
-            border-top: 2px solid #aaa;
-            border-right: 2px solid #aaa;
-            border-bottom: 1px solid #aaa;
-            position: absolute;
-            top: 0;
-            right: 0;
-            z-index: 2;
-            letter-spacing: 0.01em !important;
-        }
-
-        .title-right{
-            float: right;
-            height: 0;
-            width: 90mm;
-            height: 14.9mm;
-            width: 110mm;
-            background: #eee;
-            box-sizing: border-box;
-            border-top: 2px solid #aaa;
-            border-right: 2px solid #aaa;
-            border-bottom: 1px solid #aaa;
-            position: absolute;
-            top: 0;
-            right: 0;
-            z-index: 2;
-        }
-
-        .main-1, .main-2, .main-3 {
-            padding: 0 3mm;
-            border-left: 0.5mm solid #aaa;
-            border-right: 0.5mm solid #aaa;
-        }
-
-        .main-3 {
-            padding-bottom: 3mm;
-            border-bottom: 0.5mm solid #aaa;
-        }
-
-        h5 {
-            padding: 2mm 0;
-            font-size: 16px;
-            color: #595959;
+        h2 {
+            font-size: 5mm;
+            line-height: 5mm;
+            display:inline;
+            color: #000;
             margin:0;
+            font-style:italic;
+            font-weight: 200;
         }
-
-        .main-2 h5 { padding-bottom:0;}
+        h5 {
+            font-size: 4mm;
+            line-height: 4mm;
+            display:inline;
+            color: #000;
+            margin:0;
+            padding:0;
+            margin-bottom:1mm;
+            font-weight: bold;
+        }
 
         h6 {
-            background:#6d6e70;
-            color:#fff;
-            margin:0;
-            padding:1mm 2mm;
-            font-size:14px;
-        }
-
-        ul{
-            font-weight: 300;
-            list-style-type: none;
-            padding:0;
-            margin:0;
-        }
-
-        li{
-            font-size: 2.5mm!important;
-            line-height: 2.5mm!important;
+            font-size: 4mm;
+            line-height: 5mm;
+            color: #fff;
             margin:0;
             padding:0;
+            font-weight: bold;
         }
 
-        .info {
-            font-size: 2.5mm;
+        table.encabezado td {
+            padding: 2mm 5mm;
+            margin:0;
+            position:relative;
+        }
+        .main-1 {
+            padding: 3mm;
+            width: 203.4mm;
+            border:0.1mm solid #ccc;
+        }
+        table.info td {
+            padding: 1mm 3mm;
+            margin:0;
+            font-size: 3mm;
+            line-height: 4mm;
+            border:0.1mm solid #ccc;
+        }
+
+        table.info td table.info td {
+            border:0;
+        }
+
+        table.no-entregado td, table.no-entregado th {
+            padding: 1mm 2mm;
+            margin:0;
+            font-size: 2mm;
             line-height: 3mm;
-            font-weight: 300;
-            margin: 0;
-            padding: 2mm 0;
+            border:0.1mm solid #ccc;
         }
-
         .codigo-barras {
-            font-size: 8px;
+            padding:3mm 0;
         }
         .codigo-barras img{
-            display: block;
-            height: 13mm;
-            margin: 3mm 0 0;
-            width: 55mm;
-        }
-        .main-3 .codigo-barras img{
-            margin: 0;
-        }
-        .codigo-barras .text {
-            color: #000;
-            font-family: roboto,arial;
-            font-size: 12px;
-            margin-left: 3mm;
-            margin-top: 23px;
-            width: 100%;
-        }
-        .rnpsp{
-            font-size: 9px;
-            margin: 0 2mm 0 0;
-        }
-        hr{
-            border: 0.5mm dashed #aaa;
-            margin:0;
-        }
-        table { background:#aaa;border-left:1px solid #aaa; border-top:1px solid #aaa;}
-        table td, table th {
-            white-space: nowrap;
-            padding: 1mm 2mm!important;
-            background:#fff;
-            font-size: 2.5mm;
-            line-height: 2.2mm!important;
-            border-right:1px solid #aaa;
-            border-bottom:1px solid #aaa;
-        }
-        table.no-border,
-        table.no-border td,
-        table.no-border th{border:0;}
+            display:block;
+            margin-bottom:1mm;
 
-        table td table td, table th table th {
-            padding: 0;
         }
         .nada {
-            height:12mm;
-            vertical-align:top;
+            height:10mm;
         }
-        .codigo{
-            width: 1mm;
-            text-align: center;
+        .diagonal {
+            border-right: 12.4mm solid #ccc;
+            border-top: 12.4mm solid #000;
+            height: 0;
+            position: absolute;
+            left: 64.8mm;
+            top: -2mm;
+            width: 0;
+            z-index:99;
         }
-        img{
-            width: 28mm;
-            margin-top: 5mm;
-            margin-left: 8mm;
-        }
-
-        .logo{
-            margin: 3mm 0mm 0mm 8mm;
-        }
-
         .logo-cliente {
-            background: #fff none repeat scroll 0 0;
-            display: inline-block;
-            left: 292px;
-            padding: 13px 21px 12px;
+            background: #fff;
+            padding: 2.2mm;
             position: absolute;
-            top: 0;
-            border-top: 2px solid #aaa;
-            border-bottom: 1px solid #aaa;
-            border-right: 2px solid #aaa;
-            height: 15mm;
-            box-sizing: border-box;
-            transform: skew(-45deg);
-            -webkit-transform: skew(-45deg);
-            -moz-transform: skew(-45deg);
-            -ms-transform: skew(-45deg);
-            -o-transform: skew(-45deg);
-            z-index: 4;
+            z-index:999999999;
+            display:block;
+            margin-bottom:-20mm;
+            left:65.2mm;
         }
-        .logo-cliente img{
-            height: 30px;
-            margin: 0;
-            transform: skew(45deg);
-            -webkit-transform: skew(45deg);
-            -moz-transform: skew(45deg);
-            -ms-transform: skew(45deg);
-            -o-transform: skew(45deg);
-            width: 90px;
+        .logo-cliente img {
+            /* width: 25px;*/
+            padding: 0 20px 0 20px;
         }
-
-        .header-separador{
-            background: #000 none repeat scroll 0 0;
-            display: inline-block;
-            left: 292px;
-            padding: 13px 21px 12px;
+        .diagonal-logo-1 {
+            border-right: 12.4mm solid #fff;
+            border-top: 12.4mm solid #000;
+            height: 0;
+            width: 0;
             position: absolute;
-            top: 0;
-            width: 31.5mm;
-            border-top: 2px solid #000;
-            border-bottom: 1px solid #000;
-            border-right: 2px solid #aaa;
-            height: 15mm;
-            box-sizing: border-box;
-            transform: skew(-45deg);
-            -webkit-transform: skew(-45deg);
-            -moz-transform: skew(-45deg);
-            -ms-transform: skew(-45deg);
-            -o-transform: skew(-45deg);
-            z-index: 4;
+            left: 52.6mm;
+            z-index:999999999;
         }
-
+        .diagonal-logo-2 {
+            border-right: 12.4mm solid #000;
+            border-top: 12.4mm solid #fff;
+            height: 0;
+            width: 0;
+            position: absolute;
+            right: 0;
+            z-index:999999999;
+        }
     </style>
+    <page>
+        <div style="border-top:0.1mm solid #ccc;">
+            <table border="0" cellspacing="0" cellpadding="0" class="encabezado">
+                <tr>
+                    <td align="left" valign="middle" bgcolor="#000000" style="width:85mm;">
+                        <img src="<?= $block->getViewFileUrl('Ids_Andreani::images/logo_blanco.png') ?>" style="width:35mm;" />
+                        <?php if($logoCliente != ''): ?>
+                            <div class="diagonal-logo-1"></div>
+                            <div class="logo-cliente" style="background: #fff!important;padding: 0">
+                                <img src="<?= $block->getlogoEmpresaPath()?>" width="62" height="46"/>
+                            </div>
+                            <div class="diagonal-logo-2"></div>
+                        <?php endif; ?>
+                    </td>
 
-    <body>
-    <main>
-        <header class="banner">
-            <img src="<?= $block->getViewFileUrl('Ids_Andreani::images/logo_blanco.png') ?>">
-            <?php if($logoCliente != ''): ?>
-                <span class="logo-cliente">
-                    <img src="<?= $block->getlogoEmpresaPath()?>">
-                </span>
-            <?php endif; ?>
-            <div class="title-right-first"><h2><i><?= $titleShipment ?></i></h2></div>
-        </header>
+                    <td align="right" valign="middle" bgcolor="#CCCCCC"  style="width:85mm;">
+                        <div class="diagonal"></div>
+                        <h2><?= $titleShipment ?></h2>
+                    </td>
+                </tr>
+            </table>
+        </div>
         <div class="main-1">
             <h5>ADHERIR AL ENVÍO</h5>
-            <table width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td>
-                        <ul>
-                            <li>ID:</li>
-                            <li>Destinatario:<?= " {$lastRequest->nombre} {$lastRequest->apellido}"?></li>
-                            <li>Calle:<?= " {$lastRequest->calle} {$lastRequest->numero}"?></li>
-                            <li class="inline-info-3">Piso: <?= " {$lastRequest->piso}"?></li>
-                            <li class="inline-info-3">Depto: <?= " {$lastRequest->departamento}"?></li>
-                            <li class="inline-info-3">CP:<?= " {$lastRequest->codigopostal}"?></li>
-                            <li>Teléfono: <?= " {$lastRequest->telefonofijo}"?></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Provincia:<?= " {$lastRequest->provincia}"?></li>
-                            <li>Localidad:<?= " {$lastRequest->localidad}"?></li>
-                            <li>Suc. Distribución:<?= " {$andreaniDatosGuia->SucursalDeDistribucion}"?></li>
-                            <li>Suc Rendición:<?= " {$andreaniDatosGuia->SucursalDeRendicion}"?></li>
-                            <li class="inline-info-2">F.V.</li>
-                            <li class="inline-info-2">F.R.</li>
-                        </ul>
-                    </td>
-                    <td width="40%" rowspan="2">
-                        <ul>
-                            <li>Cliente:<?= " {$cliente}"?></li>
-                            <li>Razón Social:</li>
-                            <li>Servicio:<?= " {$contrato}"?></li>
-                            <li class="codigo-barras">
-                                <img src="<?= $codigoBarras ?>" alt="<?= $andreaniDatosGuia->NumeroAndreani ?>">
-                                <span class="text"><?= "{$andreaniDatosGuia->NumeroAndreani}" ?></span>
-                            </li>
-                            <li class="rnpsp">Correo Andreani<?= " {$andreaniDatosGuia->NumeroDePermisionaria}" ?></li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="nada">
-                        <ul>
-                            <li>Observaciones: <?= " {$lastRequest->detalledeproductosaentregar}"?> </li>
-                        </ul>
-                    </td>
-                </tr>
-            </table>
-            <p class="info"><b>Información para la sucursal:</b> La entrega se debe realizar a mayores de 18 años que se encuentren en el domicilio del destinatario. La persona que reciba el envìo deberá exhibir el documento que acredite su identidad.</p>
-        </div>
-        <header class="banner">
-            <img src="<?= $block->getViewFileUrl('Ids_Andreani::images/logo_blanco.png') ?>">
-            <span class="header-separador"></span>
-            <div class="title-right"><h2><i><?= $titleShipment ?></i></h2></div>
-        </header>
-        <div class="main-2">
-            <h5>CONSTANCIA DE ENTREGA</h5>
-            <p class="info"><b>Información para la sucursal:</b> La entrega se debe realizar a mayores de 18 años que se encuentren en el domicilio del destinatario. La persona que reciba el envìo deberá exhibir el documento que acredite su identidad.</p>
-            <table width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td>
-                        <ul>
-                            <li>ID:</li>
-                            <li>Destinatario:<?= " {$lastRequest->nombre} {$lastRequest->apellido}"?></li>
-                            <li>Calle:<?= " {$lastRequest->calle} {$lastRequest->numero}"?></li>
-                            <li class="inline-info-3">Piso: <?= " {$lastRequest->piso}"?></li>
-                            <li class="inline-info-3">Depto: <?= " {$lastRequest->departamento}"?></li>
-                            <li class="inline-info-3">CP:<?= " {$lastRequest->codigopostal}"?></li>
-                            <li>Localidad:<?= " {$lastRequest->localidad}"?></li>
-                            <li>Provincia:<?= " {$lastRequest->provincia}"?></li>
-                            <li>Teléfono: <?= " {$lastRequest->telefonofijo}"?></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>DNI:<?= " {$lastRequest->numerodedocumento}"?></li>
-                            <li>Peso:<?= " {$lastRequest->peso}"?></li>
-                            <li>Altura:</li>
-                            <li>Largo:</li>
-                            <li>Ancho:</li>
-                            <li>Suc. Distribución:<?= " {$andreaniDatosGuia->SucursalDeDistribucion}"?></li>
-                            <li>Suc Rendición:<?= " {$andreaniDatosGuia->SucursalDeRendicion}"?></li>
-                        </ul>
-                    </td>
-                    <td width="40%">
-                        <ul>
-                            <li>Cliente:<?= " {$cliente}"?></li>
-                            <li>Razón Social:</li>
-                            <li>Servicio:<?= " {$contrato}"?></li>
-                            <li class="codigo-barras">
-                                <img src="<?= $codigoBarras ?>" alt="<?= $andreaniDatosGuia->NumeroAndreani ?>">
-                                <span class="text"><?= "{$andreaniDatosGuia->NumeroAndreani}" ?></span>
-                            </li>
-                            <li class="rnpsp">Correo Andreani<?= " {$andreaniDatosGuia->NumeroDePermisionaria}" ?></li>
-                        </ul>
-                    </td>
-                </tr>
-            </table>
-            <h6 class="th-banner">ENVÍO ENTREGADO</h6>
-            <table width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td class="nada">Firma</td>
-                    <td class="nada">Aclaración</td>
-                    <td class="nada">DNI</td>
-                    <td class="nada">Fecha</td>
-                    <td class="nada">Hora</td>
-                </tr>
-            </table>
-            <h6 class="th-banner">MOTIVO DE NO ENTREGADO</h6>
-            <table width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                    <th rowspan="2" class="codigo">Cod.</th>
-                    <th rowspan="2">Motivos</th>
-                    <th colspan="2">Visitas</th>
-                    <th rowspan="2" class="codigo">Cod.</th>
-                    <th rowspan="2">Motivos</th>
-                    <th colspan="2">Visitas</th>
-                    <th colspan="4">Sucursal</th>
-                    <th colspan="2">Fecha</th>
-                </tr>
-                <tr>
-                    <td>1°</td>
-                    <td>2°</td>
-                    <td>1°</td>
-                    <td>2°</td>
-                    <td rowspan="2" colspan="4"> </td>
-                    <td rowspan="2" colspan="2"> </td>
-                </tr>
-                <tr>
-                    <td class="codigo">01</td>
-                    <td class="align-left">No Responde llamado</td>
-                    <td></td>
-                    <td></td>
-                    <td class="codigo">22</td>
-                    <td class="align-left">Dirección incompleta</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="codigo">10</td>
-                    <td class="align-left">Falleció</td>
-                    <td></td>
-                    <td></td>
-                    <td class="codigo">26</td>
-                    <td class="align-left">Dirección incorrecta</td>
-                    <td></td>
-                    <td></td>
-                    <td>Visita</td>
-                    <td>Fecha</td>
-                    <td>Hora</td>
-                    <td>Firma Distribuidor</td>
-                    <td>Lado Der.</td>
-                    <td>Lado Izq.</td>
-                </tr>
-                <tr>
-                    <td class="codigo">11</td>
-                    <td class="align-left">Desconocido</td>
-                    <td></td>
-                    <td></td>
-                    <td class="codigo">23</td>
-                    <td class="align-left">Vacaciones</td>
-                    <td></td>
-                    <td></td>
-                    <td rowspan="2">1°</td>
-                    <td rowspan="2"></td>
-                    <td rowspan="2"></td>
-                    <td rowspan="2"></td>
-                    <td rowspan="2"></td>
-                    <td rowspan="2"></td>
-                </tr>
-                <tr>
-                    <td class="codigo">14</td>
-                    <td class="align-left">Rehusado</td>
-                    <td></td>
-                    <td></td>
-                    <td class="codigo">25</td>
-                    <td class="align-left">No trabaja en la empresa</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="codigo">17</td>
-                    <td class="align-left">Se mudó</td>
-                    <td></td>
-                    <td></td>
-                    <td class="codigo">71</td>
-                    <td class="align-left">Zona inaccesible</td>
-                    <td></td>
-                    <td></td>
-                    <td rowspan="2">2°</td>
-                    <td rowspan="2"></td>
-                    <td rowspan="2"></td>
-                    <td rowspan="2"></td>
-                    <td rowspan="2"></td>
-                    <td rowspan="2"></td>
-                </tr>
-                <tr>
-                    <td class="codigo">20</td>
-                    <td class="align-left">Cerrado definitivo</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </table>
-            <p class="info">Correo Andreani<?= " {$andreaniDatosGuia->NumeroDePermisionaria}" ?></p>
-        </div>
-        <hr class="hr">
-        <div class="main-3">
-            <h5><?= $titleShipment2?></h5>
-            <h6 class="th-banner">COMPROBANTE DE IMPOSICIÓN</h6>
-            <table width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td valign="top">
-                        <table width="100%" cellspacing="0" cellpadding="0" class="no-border">
-                            <tr>
-                                <td>ID:</td>
-                                <td>Cliente:<?= " {$cliente}"?></td>
-                            <tr>
-                                <td>Destinatario:<?= " {$lastRequest->nombre} {$lastRequest->apellido}"?></td>
-                                <td>Razón Social:</td>
-                            </tr>
-                            <tr>
-                                <td>Teléfono:<?= " {$lastRequest->telefonofijo}" ?></td>
-                                <td>Servicio:<?= " {$contrato}" ?></td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td width="40%" height="90" valign="top">
-                        <div class="codigo-barras">
-                            <img src="<?= $codigoBarras ?>" alt="<?= $andreaniDatosGuia->NumeroAndreani ?>">
-                    <span class="text"><?= "{$andreaniDatosGuia->NumeroAndreani}" ?><span class="text"></span>
-                    <p class="rnpsp">Correo Andreani<?= " {$andreaniDatosGuia->NumeroAndreani}" ?></p>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-            <table width="100%" cellspacing="0" cellpadding="0" style="margin-top:-1px;">
-                <tr>
-                    <td class="nada">Sello de Sucursal</td>
-                    <td class="nada">Fecha</td>
-                    <td class="nada">Firma de operador Andreani</td>
-                </tr>
-            </table>
-        </div>
-    </main>
-    </body>
+            <div style="border:0.1mm solid #ccc; width:202.6mm;">
+                <table border="0" cellspacing="0" cellpadding="0" class="info">
+                    <tr>
+                        <td align="left" valign="top" style="width:50mm;">
+                            ID: <?= isset($lastRequest->increment_id) ? $lastRequest->increment_id : '' ?>
+                            <br />Destinatario:<?= " {$lastRequest->nombre} {$lastRequest->apellido}"?>
+                            <br />Calle:<?= " {$lastRequest->calle} {$lastRequest->numero}"?>
+                            <br />Piso:<?= " {$lastRequest->piso}"?>
+                            <br />Depto:<?= " {$lastRequest->departamento}"?>
+                            <br />CP:<?= " {$lastRequest->codigopostal}"?>
+                            <br />Teléfono: <?= " {$lastRequest->telefonofijo}"?>
 
+                        </td>
+                        <td align="left" valign="top" style="width:50mm;">
+
+                            Provincia:<?= " {$lastRequest->provincia}"?>
+                            <br />Localidad:<?= " {$lastRequest->localidad}"?>
+                            <br />Suc. Distribución:<?= " {$andreaniDatosGuia->SucursalDeDistribucion}"?>
+                            <br />Suc Rendición:<?= " {$andreaniDatosGuia->SucursalDeRendicion}"?>
+                            <br />F.V.
+                            <br />F.R.
+                        </td>
+                        <td rowspan="2" align="left" valign="top" style="width:66mm;">
+                            Cliente:<?= " {$cliente}"?>
+                            <br />Razón Social:
+                            <br />Servicio:<?= " {$contrato}"?><br />
+                            <div class="codigo-barras">
+                                <img src="<?= $codigoBarras ?>" width="120" height="48" alt="<?= $andreaniDatosGuia->NumeroAndreani ?>"/><br />
+                                <?= "{$andreaniDatosGuia->NumeroAndreani}" ?>
+                            </div>
+                            Correo Andreani<?= " {$andreaniDatosGuia->NumeroDePermisionaria}" ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="left" valign="top" class="nada">
+                            Observaciones:  <?= " {$lastRequest->detalledeproductosaentregar}"?>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <p><b>Información para la sucursal:</b> La entrega se debe realizar a mayores de 18 años que se encuentren en el domicilio del destinatario. La persona que reciba el envìo deberá exhibir el documento que acredite su identidad.</p>
+        </div>
+        <table border="0" cellspacing="0" cellpadding="0" class="encabezado">
+            <tr>
+                <td align="left" valign="middle" bgcolor="#000000" style="width:85mm;">
+                    <img src="<?= $block->getViewFileUrl('Ids_Andreani::images/logo_blanco.png') ?>" style=" width:35mm;" />
+                </td>
+                <td align="right" valign="middle" bgcolor="#CCCCCC"  style="width:85mm;">
+                    <div class="diagonal"></div>
+                    <h2><?= $titleShipment ?></h2>
+                </td>
+            </tr>
+        </table>
+        <div class="main-1" style="border-bottom:0;">
+            <h5>CONSTANCIA DE ENTREGA</h5>
+            <p><b>Información para la sucursal:</b> La entrega se debe realizar a mayores de 18 años que se encuentren en el domicilio del destinatario. La persona que reciba el envìo deberá exhibir el documento que acredite su identidad.</p>
+            <div style="border:0.1mm solid #ccc; width:202.6mm;">
+                <table border="0" cellspacing="0" cellpadding="0" class="info">
+                    <tr>
+                        <td align="left" valign="top" style="width:50mm;">
+                            ID: <?= isset($lastRequest->increment_id) ? $lastRequest->increment_id : '' ?>
+                            <br />Destinatario:<?= " {$lastRequest->nombre} {$lastRequest->apellido}"?>
+                            <br />Calle:<?= " {$lastRequest->calle} {$lastRequest->numero}"?>
+                            <br />Piso: <?= " {$lastRequest->piso}"?>
+                            <br />Depto: <?= " {$lastRequest->departamento}"?>
+                            <br /">CP:<?= " {$lastRequest->codigopostal}"?>
+                            <br />Localidad:<?= " {$lastRequest->localidad}"?>
+                            <br />Provincia:<?= " {$lastRequest->provincia}"?>
+                            <br />Teléfono: <?= " {$lastRequest->telefonofijo}"?>
+                        </td>
+                        <td align="left" valign="top" style="width:50mm;">
+                            DNI:<?= " {$lastRequest->numerodedocumento}"?>
+                            <br />Peso:<?=  " {$lastRequest->peso}"?>
+                            <br />Altura:
+                            <br />Largo:
+                            <br />Ancho:
+                            <br />Suc. Distribución:<?= " {$andreaniDatosGuia->SucursalDeDistribucion}"?>
+                            <br />Suc. Rendición:<?= " {$andreaniDatosGuia->SucursalDeRendicion}"?>
+                        </td>
+                        <td align="left" valign="top" style="width:66mm;">
+                            Cliente:<?= " {$cliente}"?>
+                            <br />Razón Social:
+                            <br />Servicio:<?= " {$contrato}"?>
+                            <br />
+                            <div class="codigo-barras">
+                                <img src="<?= $codigoBarras ?>" width="120" height="48" alt="<?= $andreaniDatosGuia->NumeroAndreani ?>" /><br />
+                                <?= "{$andreaniDatosGuia->NumeroAndreani}" ?>
+                            </div>
+                            Correo Andreani<?= " {$andreaniDatosGuia->NumeroDePermisionaria}" ?>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div style="border:0.1mm solid #999; width:203.2mm; background:#999;">
+                <h6>&nbsp;&nbsp;ENVÍO ENTREGADO</h6>
+            </div>
+            <div style="border:0.1mm solid #ccc; width:203.2mm;">
+                <table border="0" cellspacing="0" cellpadding="0" class="info">
+                    <tr>
+                        <td style="width: 29.2mm" class="nada">Firma</td>
+                        <td style="width: 28mm" class="nada">Aclaración</td>
+                        <td style="width: 28mm" class="nada">DNI</td>
+                        <td style="width: 28mm" class="nada">Fecha</td>
+                        <td style="width: 28mm" class="nada">Hora</td>
+                    </tr>
+                </table>
+            </div>
+            <div style="border:0.1mm solid #999; width:203.2mm; background:#999;">
+                <h6>&nbsp;&nbsp;MOTIVO DE NO ENTREGADO</h6>
+            </div>
+            <div style="border:0.1mm solid #ccc; width:203.1mm;">
+                <table border="0" cellspacing="0" cellpadding="0" class="no-entregado">
+                    <tr>
+                        <th rowspan="2" style="width: 11.5mm">Cod.</th>
+                        <th rowspan="2" style="width: 11.5mm">Motivos</th>
+                        <th colspan="2" style="width: 11.5mm">Visitas</th>
+                        <th rowspan="2" style="width: 11.5mm">Cod.</th>
+                        <th rowspan="2" style="width: 11.5mm">Motivos</th>
+                        <th colspan="2" style="width: 11.5mm">Visitas</th>
+                        <th colspan="4" style="width: 11.5mm">Sucursal</th>
+                        <th colspan="2" style="width: 11.5mm">Fecha</th>
+                    </tr>
+                    <tr>
+                        <td>1°</td>
+                        <td>2°</td>
+                        <td>1°</td>
+                        <td>2°</td>
+                        <td rowspan="2" colspan="4"> </td>
+                        <td rowspan="2" colspan="2"> </td>
+                    </tr>
+                    <tr>
+                        <td class="codigo">01</td>
+                        <td class="align-left">No Responde llamado</td>
+                        <td></td>
+                        <td></td>
+                        <td class="codigo">22</td>
+                        <td class="align-left">Dirección incompleta</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="codigo">10</td>
+                        <td class="align-left">Falleció</td>
+                        <td></td>
+                        <td></td>
+                        <td class="codigo">26</td>
+                        <td class="align-left">Dirección incorrecta</td>
+                        <td></td>
+                        <td></td>
+                        <td>Visita</td>
+                        <td>Fecha</td>
+                        <td>Hora</td>
+                        <td>Firma Distribuidor</td>
+                        <td>Lado Der.</td>
+                        <td>Lado Izq.</td>
+                    </tr>
+                    <tr>
+                        <td class="codigo">11</td>
+                        <td class="align-left">Desconocido</td>
+                        <td></td>
+                        <td></td>
+                        <td class="codigo">23</td>
+                        <td class="align-left">Vacaciones</td>
+                        <td></td>
+                        <td></td>
+                        <td rowspan="2">1°</td>
+                        <td rowspan="2"></td>
+                        <td rowspan="2"></td>
+                        <td rowspan="2"></td>
+                        <td rowspan="2"></td>
+                        <td rowspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td class="codigo">14</td>
+                        <td class="align-left">Rehusado</td>
+                        <td></td>
+                        <td></td>
+                        <td class="codigo">25</td>
+                        <td class="align-left">No trabaja en la empresa</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="codigo">17</td>
+                        <td class="align-left">Se mudó</td>
+                        <td></td>
+                        <td></td>
+                        <td class="codigo">71</td>
+                        <td class="align-left">Zona inaccesible</td>
+                        <td></td>
+                        <td></td>
+                        <td rowspan="2">2°</td>
+                        <td rowspan="2"></td>
+                        <td rowspan="2"></td>
+                        <td rowspan="2"></td>
+                        <td rowspan="2"></td>
+                        <td rowspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td class="codigo">20</td>
+                        <td class="align-left">Cerrado definitivo</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <p>Correo Andreani<?=  " {$andreaniDatosGuia->NumeroDePermisionaria}" ?></p>
+        </div>
+
+        <div class="main-1" style="border-top: 0.1mm dashed #aaa;">
+            <h5><?= $titleShipment2?></h5>
+            <div style="border:0.1mm solid #999; width:203.2mm; background:#999; margin-top:2mm;">
+                <h6>COMPROBANTE DE IMPOSICIÓN</h6>
+            </div>
+            <div style="border:0.1mm solid #ccc; width:202.6mm;">
+                <table border="0" cellspacing="0" cellpadding="0" class="info">
+                    <tr>
+                        <td align="left" valign="top" style="width:124mm; padding:0;">
+                            <table border="0" cellspacing="0" cellpadding="0" class="info">
+                                <tr>
+                                    <td>ID: <?= isset($lastRequest->increment_id) ? $lastRequest->increment_id : '' ?></td>
+                                    <td>Cliente:<?= " {$cliente}"?></td>
+                                </tr>
+                                <tr>
+                                    <td>Destinatario:<?= " {$lastRequest->nombre} {$lastRequest->apellido}"?></td>
+                                    <td>Razón Social:</td>
+                                </tr>
+                                <tr>
+                                    <td>Teléfono:<?= " {$lastRequest->telefonofijo}" ?></td>
+                                    <td>Servicio:<?= " {$contrato}" ?></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td align="left" valign="top" style="width:66.3mm;">
+                            <div class="codigo-barras" style="padding-top:1mm;">
+                                <img src="<?= $codigoBarras ?>" width="120" height="48" alt="<?= $andreaniDatosGuia->NumeroAndreani ?>" /><br>
+                                <?= $andreaniDatosGuia->NumeroAndreani ?>
+                            </div>
+                            Correo Andreani<?=" {$andreaniDatosGuia->NumeroDePermisionaria}" ?>
+                        </td>
+                    </tr>
+                </table>
+                <table border="0" cellspacing="0" cellpadding="0" class="info">
+                    <tr>
+                        <td style="width: 55.3mm" class="nada">Sello de Sucursal</td>
+                        <td style="width: 55.3mm" class="nada">Fecha</td>
+                        <td style="width: 55.3mm" class="nada">Firma de operador Andreani</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </page>
 
 <?php else: ?>
     <div>

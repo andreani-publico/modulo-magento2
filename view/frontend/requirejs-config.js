@@ -35,10 +35,22 @@ var config = {
                 'Ids_Andreani/template/billing-address/list',
             'Magento_Checkout/js/model/shipping-save-processor/default':
                 'Ids_Andreani/js/model/shipping-save-processor/default',
-            //'Magento_Checkout/template/cart/shipping-rates':
-            //    'Ids_Andreani/template/cart/shipping-rates',
-            //'Magento_Checkout/js/view/cart/shipping-rates':
-            //    'Ids_Andreani/js/view/cart/shipping-rates'
+            'Magento_Checkout/template/cart/shipping-rates':
+                'Ids_Andreani/template/cart/shipping-rates',
+            'Magento_Checkout/js/view/cart/shipping-rates':
+                'Ids_Andreani/js/view/cart/shipping-rates',
+            'Magento_Checkout/js/view/billing-address':
+                'Ids_Andreani/js/view/billing-address',
+            'Magento_Checkout/template/shipping-address/address-renderer/default':
+                'Ids_Andreani/template/shipping-address/address-renderer/default',
+            'Magento_Checkout/template/shipping-information/address-renderer/default':
+                'Ids_Andreani/template/shipping-information/address-renderer/default',
+            'Magento_Checkout/js/view/shipping-information/address-renderer/default':
+                'Ids_Andreani/js/view/shipping-information/address-renderer/default',
+            'Magento_Checkout/js/action/create-shipping-address':
+                'Ids_Andreani/js/action/create-shipping-address',
+            'Magento_Checkout/js/model/checkout-data-resolver':
+                'Ids_Andreani/js/model/checkout-data-resolver'
 
         }
     }

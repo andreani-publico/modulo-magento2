@@ -11,7 +11,6 @@ use Ids\Andreani\Helper\Data as AndreaniHelper;
 use Magento\Framework\Controller\Result\RawFactory as ResultRawFactory;
 use Magento\Framework\App\Response\Http\FileFactory;
 
-
 /**
  * Class Generarguia
  *
@@ -47,7 +46,10 @@ class Index extends Action
      */
     protected $_fileFactory;
 
-
+    /**
+     * @var ResultFactory
+     */
+    protected $_resultRedirect;
 
     /**
      * Index constructor.
@@ -70,7 +72,7 @@ class Index extends Action
         $this->_andreaniHelper      = $andreaniHelper;
         $this->_resultRawFactory    = $resultRawFactory;
         $this->_fileFactory         = $fileFactory;
-
+        $this->_resultRedirect      = $context->getResultFactory();
 
         parent::__construct($context);
     }
@@ -87,7 +89,6 @@ class Index extends Action
         $helper             = $this->_andreaniHelper;
         $orderId            = $request->getParam('order_id');
         $order              = $helper->getLoadShipmentOrder($orderId);
-        $andreaniDatosGuia  = '';
         $guiasArray         = [];
 
         if($order->hasShipments())
@@ -104,38 +105,47 @@ class Index extends Action
 
         foreach($guiasArray AS $key => $guiaData)
         {
-            //$andreaniDatosGuia  = $guiaData->datosguia->GenerarEnviosDeEntregaYRetiroConDatosDeImpresionResult;
-
-            $object             = $guiaData->datosguia->GenerarEnviosDeEntregaYRetiroConDatosDeImpresionResult;
-
+            $object = $guiaData->datosguia->GenerarEnviosDeEntregaYRetiroConDatosDeImpresionResult;
             $helper->crearCodigoDeBarras($object->NumeroAndreani);
-
         }
-        $pdfName    = date_timestamp_get(date_create()).'_'.$orderId;
-        $urlHtml    = $helper->getStoreUrl('andreani/generarguia/generarhtml',['order_id' =>$orderId]);
-        $file       = $helper->generatePdfFile($pdfName,$urlHtml);
 
-        $pdf = \Zend_Pdf::load($file);
-        $fileName = $pdfName.'.pdf';
-        $this->_fileFactory->create(
-            $fileName,
-            str_replace('/Annot /Subtype /Link', '/Annot /Subtype /Link /Border[0 0 0]', $pdf->render()),
-            \Magento\Framework\App\Filesystem\DirectoryList::MEDIA,
-            'application/pdf'
-        );
+        $pdfName    = date_timestamp_get(date_create()).'_'.$order->getIncrementId();
 
+        /**
+         * Crea el bloque dinámicamente y le pasa los parámetros por array para
+         * que renderice la guía en html.
+         */
+        $block = $this->_view
+            ->getLayout()
+            ->createBlock('Ids\Andreani\Block\Generarhtml',
+                "guia",
+                ['data' => [
+                    'order_id' => $orderId
+                ]
+                ])
+            ->setData('area', 'frontend')
+            ->setTemplate('Ids_Andreani::guia.phtml');
 
-        unlink($file);
-        foreach($guiasArray AS $key => $guiaData)
+        $html = $block->toHtml();
+
+        /**
+         * Espera recibir "true" después de mandarle al método del helper
+         * que se encarga de generar la guía en HTML. El tercer parámetro
+         * fuerza la descarga (D) o fuerza el almacenamiento en el filesystem (F)
+         */
+        if($helper->generateHtml2Pdf($pdfName,$html,'D'))
         {
-            //$andreaniDatosGuia  = $guiaData->datosguia->GenerarEnviosDeEntregaYRetiroConDatosDeImpresionResult;
-
-            $object             = $guiaData->datosguia->GenerarEnviosDeEntregaYRetiroConDatosDeImpresionResult;
-            unlink($helper->getDirectoryPath('media')."/andreani/".$object->NumeroAndreani.'.png');
-
+            foreach($guiasArray AS $key => $guiaData)
+            {
+                $object  = $guiaData->datosguia->GenerarEnviosDeEntregaYRetiroConDatosDeImpresionResult;
+                unlink($helper->getDirectoryPath('media')."/andreani/".$object->NumeroAndreani.'.png');
+            }
         }
 
+        $resultRedirect = $this->_resultRedirect->create(ResultFactory::TYPE_REDIRECT);
+        $resultRedirect->setUrl($this->_redirect->getRefererUrl());
 
+        return $resultRedirect;
     }
 }
 

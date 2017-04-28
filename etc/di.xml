@@ -6,4 +6,20 @@
     <type name="Magento\Quote\Model\Quote\Address\ToOrderAddress">
         <plugin name="save-in-order-address" type="Ids\Andreani\Plugin\Quote\Address\ToOrderAddressPlugin" sortOrder="11"/>
     </type>
+    <type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
+        <plugin name="andreani-campos-custom-billing-address" type="Ids\Andreani\Plugin\Checkout\Block\Checkout\LayoutProcessorPlugin" sortOrder="90"/>
+    </type>
+    <type name="Magento\Customer\Model\ResourceModel\AddressRepository">
+        <plugin name="andreani-campos-custom-billing-address-usuario-invitado" type="Ids\Andreani\Plugin\Customer\AddressRepositoryPlugin" sortOrder="100"/>
+    </type>
+    <type name="Magento\Customer\Model\ResourceModel\CustomerRepository">
+        <plugin name="andreani-campos-custom-customer-usuario-invitado" type="Ids\Andreani\Plugin\Customer\CustomerRepositoryPlugin" sortOrder="100"/>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="andreani_sales_order_grid_data_source" xsi:type="string">Magento\Sales\Model\ResourceModel\Order\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

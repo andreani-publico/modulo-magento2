@@ -14,12 +14,6 @@
  * @var $block \Magento\Customer\Block\Address\Edit
  */
 ?>
-<?php
-/**
- * Jira: PARUOLO-11
- * Campos de los atributos custom que instala el módulo "Clients".
- */
-?>
 <form class="form-address-edit" action="<?php /* @escapeNotVerified */ echo $block->getSaveUrl() ?>" method="post" id="form-validate" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
     <fieldset class="fieldset">
         <legend class="legend"><span><?php /* @escapeNotVerified */ echo __('Contact Information') ?></span></legend><br>
@@ -35,7 +29,8 @@
                 if($dni = $block->getAddress()->getCustomAttribute('dni'))
                     $dni = $dni->getValue();
                 ?>
-                <input type="text" name="dni" value="<?php echo $dni ?>" title="<?php /* @escapeNotVerified */ echo __('Número de documento') ?>" class="input-text required-entry" id="dni">
+                <input type="text" name="dni" value="<?php echo $dni ?>" title="<?php /* @escapeNotVerified */ echo __('Número de documento') ?>"
+                       class="input-text required-entry validate-number" maxlength="8" minlength="6" id="dni">
             </div>
         </div>
 
@@ -48,7 +43,9 @@
         <div class="field telephone required">
             <label class="label" for="telephone"><span><?php /* @escapeNotVerified */ echo __('Phone Number') ?></span></label>
             <div class="control">
-                <input type="text" name="telephone" value="<?php echo $block->escapeHtml($block->getAddress()->getTelephone()) ?>" title="<?php /* @escapeNotVerified */ echo __('Phone Number') ?>" class="input-text <?php /* @escapeNotVerified */ echo $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('telephone') ?>" id="telephone">
+                <input type="text" name="telephone" value="<?php echo $block->escapeHtml($block->getAddress()->getTelephone()) ?>"
+                       title="<?php /* @escapeNotVerified */ echo __('Phone Number') ?>" maxlength="20" minlength="7"
+                       class="input-text validate-number <?php /* @escapeNotVerified */ echo $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('telephone') ?>" id="telephone">
             </div>
         </div>
         <div class="field celular">
@@ -58,7 +55,8 @@
                 if($celular = $block->getAddress()->getCustomAttribute('celular'))
                     $celular = $celular->getValue();
                 ?>
-                <input type="text" name="celular" value="<?php echo $celular ?>" title="<?php /* @escapeNotVerified */ echo __('Celular') ?>" class="input-text" id="celular">
+                <input type="text" name="celular" value="<?php echo $celular ?>" title="<?php /* @escapeNotVerified */ echo __('Celular') ?>"
+                       maxlength="20" minlength="7" class="input-text validate-number" id="celular">
             </div>
         </div>
         <div class="field fax">
@@ -98,7 +96,7 @@
                 if($altura = $block->getAddress()->getCustomAttribute('altura'))
                     $altura = $altura->getValue();
                 ?>
-                <input type="text" name="altura" value="<?php echo $altura ?>" title="<?php /* @escapeNotVerified */ echo __('Altura') ?>" class="input-text required-entry" id="altura">
+                <input type="text" name="altura" value="<?php echo $altura ?>" title="<?php /* @escapeNotVerified */ echo __('Altura') ?>" class="input-text required-entry validate-number" id="altura">
             </div>
         </div>
         <div class="field piso">
@@ -108,7 +106,7 @@
                 if($piso = $block->getAddress()->getCustomAttribute('piso'))
                     $piso = $piso->getValue();
                 ?>
-                <input type="text" name="piso" value="<?php echo $piso ?>" title="<?php /* @escapeNotVerified */ echo __('Piso') ?>" class="input-text" id="piso">
+                <input type="text" name="piso" value="<?php echo $piso ?>" title="<?php /* @escapeNotVerified */ echo __('Piso') ?>" class="input-text validate-number" id="piso">
             </div>
         </div>
 
@@ -167,7 +165,7 @@
                     $observaciones = $observaciones->getValue();
                 ?>
                 <textarea name="observaciones" title="<?php /* @escapeNotVerified */ echo __('Observaciones') ?>"
-                          class="input-text" id="observaciones"><?php echo $observaciones ?></textarea>
+                          class="input-text validate-no-html-tags" maxlength="300" id="observaciones"><?php echo $observaciones ?></textarea>
             </div>
         </div>
 

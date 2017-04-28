@@ -2,5 +2,6 @@
 
 <script type="text/javascript">
     window.andreaniConfig = {};
+    window.andreaniConfig.baseUrl = "<?= $this->getBaseUrl() ?>";
     window.andreaniConfig.provincias = <?= \Zend_Json::encode($this->getProvincias()) ?>;
 </script>

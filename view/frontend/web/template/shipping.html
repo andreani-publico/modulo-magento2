@@ -111,7 +111,7 @@
                                 </td>
 
                                 <td class="col col-method"
-                                    data-bind="attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}">Busca el pedido en la sucursal más cercana.</td> <!-- text: method.method_title -->
+                                    data-bind="attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}">Retir&aacute; tu pedido en la sucursal m&aacute;s cercana.</td>
 
                                 <td class="col col-carrier"
                                     data-bind="text: method.carrier_title, attr: {'id': 'label_carrier_' + method.method_code + '_' + method.carrier_code}"></td>
@@ -213,7 +213,7 @@
                     <span><!-- ko text: errorValidationMessage()--><!-- /ko --></span>
                 </div>
                 <!-- /ko -->
-                <div class="actions-toolbar" id="shipping-method-buttons-container" style="display: none" >
+                <div class="actions-toolbar" id="shipping-method-buttons-container" > <!-- style="display: none"-->
                     <div class="primary">
                         <button data-role="opc-continue" type="submit" class="button action continue primary">
                             <span><!-- ko i18n: 'Next'--><!-- /ko --></span>

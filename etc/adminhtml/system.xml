@@ -4,7 +4,6 @@
         <section id="carriers" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
             <group id="andreaniestandar" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Andreani Estandar</label>
-
                 <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Habilitado</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -14,16 +13,6 @@
                 </field>
                 <field id="description" translate="label" type="textarea" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Descripción</label>
-                </field>
-                <field id="sallowspecific" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Envío a países</label>
-                    <frontend_class>shipping-applicable-country</frontend_class>
-                    <source_model>Magento\Shipping\Model\Config\Source\Allspecificcountries</source_model>
-                </field>
-                <field id="specificcountry" translate="label" type="multiselect" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Países de envío</label>
-                    <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                    <can_be_empty>1</can_be_empty>
                 </field>
                 <field id="showmethod" translate="label" type="select" sortOrder="920" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Mostrar mensaje de método no disponible en el checkout</label>
@@ -44,19 +33,6 @@
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Título</label>
-                </field>
-                <field id="description" translate="label" type="textarea" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Descripción</label>
-                </field>
-                <field id="sallowspecific" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Envío a países</label>
-                    <frontend_class>shipping-applicable-country</frontend_class>
-                    <source_model>Magento\Shipping\Model\Config\Source\Allspecificcountries</source_model>
-                </field>
-                <field id="specificcountry" translate="label" type="multiselect" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Países de envío</label>
-                    <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                    <can_be_empty>1</can_be_empty>
                 </field>
                 <field id="showmethod" translate="label" type="select" sortOrder="920" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Mostrar mensaje de método no disponible en el checkout</label>
@@ -81,16 +57,6 @@
                 <field id="description" translate="label" type="textarea" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Descripción</label>
                 </field>
-                <field id="sallowspecific" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Envío a países</label>
-                    <frontend_class>shipping-applicable-country</frontend_class>
-                    <source_model>Magento\Shipping\Model\Config\Source\Allspecificcountries</source_model>
-                </field>
-                <field id="specificcountry" translate="label" type="multiselect" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Países de envío</label>
-                    <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                    <can_be_empty>1</can_be_empty>
-                </field>
                 <field id="showmethod" translate="label" type="select" sortOrder="920" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Mostrar mensaje de método no disponible en el checkout</label>
                     <frontend_class>shipping-skip-hide</frontend_class>
@@ -111,6 +77,11 @@
                     <comment><![CDATA[El modo define a qué urls debe conectarse el modulo en cada webservice.]]></comment>
                     <source_model>Ids\Andreani\Model\Source\Modo</source_model>
                 </field>
+                <field id="log_generacion_guias" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Habilitar debug de generación de guías y errores</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Cuando este modo se encuentra habilitado, se genera un log cada vez que el sitio se conecta con Andreani para crear una guía de envío. Se guardan los datos enviados y recibidos. También se guarda el stacktrace completo de errores al conectarse al webservice.]]></comment>
+                </field>
                 <field id="usuario" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Usuario</label>
                 </field>
@@ -129,16 +100,11 @@
                     <label>Peso máximo habilitado</label>
                     <source_model>Ids\Andreani\Model\Source\PesoMaximo</source_model>
                 </field>
-                <!--<field id="metodo" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="0">-->
-                    <!--<label>Método consulta sucursales</label>-->
-                    <!--<source_model>Ids\Andreani\Model\Source\Metodo</source_model>-->
-                <!--</field>-->
-                <!--<field id="cache" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="0">-->
-                    <!--<label>Cache</label>-->
-                    <!--<comment><![CDATA[Optimiza las llamadas a las Sucursales y la distancia entre la sucursal y el cliente con Google Maps.]]></comment>-->
-
-                    <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
-                <!--</field>-->
+                <field id="generacion_guia" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Generación de guías</label>
+                    <comment><![CDATA[Por defecto, se genera una guía por pedido.]]></comment>
+                    <source_model>Ids\Andreani\Model\Source\GeneracionGuia</source_model>
+                </field>
                 <field id="tipo_cotizacion" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Tipo de cotizacion</label>
                     <source_model>Ids\Andreani\Model\Source\TipoCotizacion</source_model>
@@ -152,6 +118,16 @@
                 <field id="tracking_url" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Url para seguimiento de envíos</label>
                     <comment>La url ingresada no debe terminar con "/"</comment>
+                </field>
+                <field id="andreani_trans_emails" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Emails Transaccionales</label>
+                    <source_model>Ids\Andreani\Model\Source\TransEmails</source_model>
+                    <comment>Seleccione el email donde desea que se notifique cuando una guía ha sido generada correctamente. Por defecto, los mails se envían al mail Representante de Ventas.</comment>
+                </field>
+                <field id="andreani_emails_transaccionales" translate="label comment" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Template Emails Transaccionales</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                    <comment>Template Email que se usará para notificar la generación de las guía.</comment>
                 </field>
                 <group id="andreani_ws_prod_urls" translate="label" type="text" sortOrder="402" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Andreani Urls WS producción</label>
