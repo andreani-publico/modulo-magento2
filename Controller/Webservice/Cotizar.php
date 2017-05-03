@@ -127,80 +127,109 @@ class Cotizar extends Action
             $sucursalId      = $request->getParam('sucursalId');
             $pesoTotal       = 0;
             $volumenTotal    = 0;
+            $valorProductos  = 0;
             $quote           = $this->_cart->getQuote();
 
-            if($helper->getTipoCotizacion() == $helper::COTIZACION_ONLINE)
+            if($checkoutSession->getFreeShipping())
             {
-                foreach($quote->getAllItems() as $_item)
-                {
-                    $_producto = $_item->getProduct();
-                    $volumenTotal += (int) $_producto->getResource()
-                    ->getAttributeRawValue($_producto->getId(),'volumen',$_producto->getStoreId()) * $_item->getQty();
-
-                    $pesoTotal += $_item->getQty() * $_item->getWeight();
-                }
-
-                $ws = $this->_webservice;
-
-                $sucursal = $this->_sucursalFactory->create()
-                    ->getCollection()
-                    ->addFieldToFilter('codigo_sucursal',['eq'=>$sucursalId])
-                    ->getFirstItem();
-
-                /**
-                 * conversion de los kg a gramos
-                 */
-                $pesoTotal = $pesoTotal * 1000;
-
-                $costoEnvio = $ws->cotizarEnvio(
-                    [
-                        'sucursalRetiro'=> $sucursalId,
-                        'cpDestino'     => $sucursal->getCodigoPostal(),
-                        'volumen'       => $volumenTotal,
-                        'peso'          => $pesoTotal,
-                        'valorDeclarado'=> $quote->getGrandTotal(),
-                    ],$tipoCarrier ? $tipoCarrier : \Ids\Andreani\Model\Carrier\AndreaniSucursal::CARRIER_CODE);
-            }
-            elseif($helper->getTipoCotizacion() == $helper::COTIZACION_TABLA)
-            {
-                foreach ($quote->getAllItems() as $_item)
-                {
-                    $pesoTotal += $_item->getQty() * $_item->getWeight();
-                }
-
-                /**
-                 * conversion de los kg a gramos
-                 */
-                $pesoTotal = $pesoTotal * 1000;
-
-                /** @var $tarifa \Ids\Andreani\Model\Tarifa */
-                $tarifa = $this->_tarifaFactory->create();
-
-                $costoEnvio = $tarifa->cotizarEnvio(
-                    [
-                        'codigoSucursal'=> $sucursalId,
-                        'peso'          => $pesoTotal,
-                        'tipo'          => \Ids\Andreani\Model\Carrier\AndreaniSucursal::CARRIER_CODE
-                    ]);
-            }
-
-            if($costoEnvio)
-            {
-                $checkoutSession->setCotizacionAndreaniSucursal($costoEnvio);
+                $checkoutSession->setCotizacionAndreaniSucursal(0);
                 $checkoutSession->setCodigoSucursalAndreani($sucursalId);
-
-                /**
-                 * Temporal! el nombre de la sucursal no debe venir por parametro. Se debe cargar al traer la sucursal
-                 * con el id que viene por parametro...
-                 */
                 $checkoutSession->setNombreAndreaniSucursal($request->getParam('sucursalTxt'));
 
-                /**
-                 * Formateo el precio con el seteado en la tienda
-                 */
-                $costoEnvio = $this->_priceHelper->currency($costoEnvio,true,false);
+                $costoEnvio = $this->_priceHelper->currency(0,true,false);
 
                 return $result->setData(['cotizacion'=> $costoEnvio,'method_title'=>$request->getParam('sucursalTxt')]);
+            }
+            else
+            {
+                if($helper->getTipoCotizacion() == $helper::COTIZACION_ONLINE)
+                {
+                    foreach($quote->getAllItems() as $_item)
+                    {
+                        if($_item->getProductType() == 'configurable')
+                            continue;
+
+                        $_producto = $_item->getProduct();
+
+                        if($_item->getParentItem())
+                            $_item = $_item->getParentItem();
+
+                        $volumenTotal += (int) $_producto->getResource()
+                                ->getAttributeRawValue($_producto->getId(),'volumen',$_producto->getStoreId()) * $_item->getQty();
+
+                        $pesoTotal += $_item->getQty() * $_item->getWeight();
+
+                        if($_producto->getCost())
+                            $valorProductos += $_producto->getCost() * $_item->getQty();
+                        else
+                            $valorProductos += $_item->getPrice() * $_item->getQty();
+                    }
+
+                    $ws = $this->_webservice;
+
+                    $sucursal = $this->_sucursalFactory->create()
+                        ->getCollection()
+                        ->addFieldToFilter('codigo_sucursal',['eq'=>$sucursalId])
+                        ->getFirstItem();
+
+                    /**
+                     * conversion de los kg a gramos
+                     */
+                    $pesoTotal = $pesoTotal * 1000;
+
+                    $costoEnvio = $ws->cotizarEnvio(
+                        [
+                            'sucursalRetiro'=> $sucursalId,
+                            'cpDestino'     => $sucursal->getCodigoPostal(),
+                            'volumen'       => $volumenTotal,
+                            'peso'          => $pesoTotal,
+                            'valorDeclarado'=> $valorProductos,
+                        ],$tipoCarrier ? $tipoCarrier : \Ids\Andreani\Model\Carrier\AndreaniSucursal::CARRIER_CODE);
+                }
+                elseif($helper->getTipoCotizacion() == $helper::COTIZACION_TABLA)
+                {
+                    foreach ($quote->getAllItems() as $_item)
+                    {
+                        if($_item->getProductType() == 'configurable')
+                            continue;
+
+                        $pesoTotal += $_item->getQty() * $_item->getWeight();
+                    }
+
+                    /**
+                     * conversion de los kg a gramos
+                     */
+                    $pesoTotal = $pesoTotal * 1000;
+
+                    /** @var $tarifa \Ids\Andreani\Model\Tarifa */
+                    $tarifa = $this->_tarifaFactory->create();
+
+                    $costoEnvio = $tarifa->cotizarEnvio(
+                        [
+                            'codigoSucursal'=> $sucursalId,
+                            'peso'          => $pesoTotal,
+                            'tipo'          => \Ids\Andreani\Model\Carrier\AndreaniSucursal::CARRIER_CODE
+                        ]);
+                }
+
+                if($costoEnvio)
+                {
+                    $checkoutSession->setCotizacionAndreaniSucursal($costoEnvio);
+                    $checkoutSession->setCodigoSucursalAndreani($sucursalId);
+
+                    /**
+                     * Temporal! el nombre de la sucursal no debe venir por parametro. Se debe cargar al traer la sucursal
+                     * con el id que viene por parametro...
+                     */
+                    $checkoutSession->setNombreAndreaniSucursal($request->getParam('sucursalTxt'));
+
+                    /**
+                     * Formateo el precio con el seteado en la tienda
+                     */
+                    $costoEnvio = $this->_priceHelper->currency($costoEnvio,true,false);
+
+                    return $result->setData(['cotizacion'=> $costoEnvio,'method_title'=>$request->getParam('sucursalTxt')]);
+                }
             }
         }
 

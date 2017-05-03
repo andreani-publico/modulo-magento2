@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../Magento/Backend/etc/menu.xsd">
     <menu>
-        <add id="Ids_Andreani::menuPrincipal" title="Andreani" module="Ids_Andreani" sortOrder="500" parent="Magento_Backend::stores" resource="Ids_Andreani::menuPrincipal"/>
-        <add id="Ids_Andreani::tarifa_admin" title="Administrar tarifas" module="Ids_Andreani" sortOrder="100" parent="Ids_Andreani::menuPrincipal" action="andreani/tarifa/admin" resource="Ids_Andreani::tarifa_admin"/>
+        <add id="Ids_Andreani::menuPrincipal" title="Andreani" module="Magento_Config" sortOrder="70" resource="Magento_Config::brand"/>
+        <add id="Ids_Andreani::tarifa_admin" title="Administracion de tarifas por tabla" module="Ids_Andreani" sortOrder="100" parent="Ids_Andreani::menuPrincipal" action="andreani/tarifa/admin" resource="Ids_Andreani::tarifa_admin"/>
+        <add id="Ids_Andreani::guias" title="Generaración masiva de guías" module="Ids_Andreani" sortOrder="100" parent="Ids_Andreani::menuPrincipal" action="andreani/guias/admin" resource="Ids_Andreani::guias"/>
     </menu>
 </config>

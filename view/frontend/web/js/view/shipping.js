@@ -82,7 +82,7 @@ define(
             sucursalesAndreaniDisponibles: ko.observableArray([]),
             sucursalAndreaniSeleccionada: ko.observable(''),
             nextButtonVisible: ko.observable(false),
-
+            baseUrl: window.andreaniConfig.baseUrl,
             /**
              * @return {exports}
              */
@@ -233,28 +233,18 @@ define(
                 checkoutData.setSelectedShippingRate(shippingMethod.carrier_code + '_' + shippingMethod.method_code);
 
                 /** AGREGADO **/
-                var formDireccion = checkoutData.getShippingAddressFromData();
 
-                if ((typeof quote.shippingAddress().customerAddressId != 'undefined')
-                || (formDireccion.firstname != '' && formDireccion.lastname != '' && formDireccion.postcode != ''
-                    && formDireccion.region != '' && formDireccion.city != '' && formDireccion.telephone != ''
-                    && formDireccion.street[0] != ''))
+                if(shippingMethod.carrier_code == 'andreanisucursal' && shippingMethod.method_code == 'sucursal')
                 {
-                    if(shippingMethod.carrier_code == 'andreanisucursal' && shippingMethod.method_code == 'sucursal')
-                    {
-                        $('.retiro-sucursal-row').show();
+                    $('.retiro-sucursal-row').show();
 
-                        $('#andreanisucursal-provincia').val('');
-                        $('#andreanisucursal-localidad').val('').hide();
-                        $('#andreanisucursal-sucursal').val('').hide();
-
-                        $('#shipping-method-buttons-container').hide();
-                    }
-                    else
-                    {
-                        $('.retiro-sucursal-row').hide();
-                        $('#shipping-method-buttons-container').show();
-                    }
+                    $('#andreanisucursal-provincia').val('');
+                    $('#andreanisucursal-localidad').val('').hide();
+                    $('#andreanisucursal-sucursal').val('').hide();
+                }
+                else
+                {
+                    $('.retiro-sucursal-row').hide();
                 }
                 /** /AGREGADO **/
 
@@ -349,18 +339,16 @@ define(
             {
                 var provinciaSeleccionada = this.provinciaSeleccionada();
                 $('.localidad-sin-sucursales').hide();
-                $('#shipping-method-buttons-container').hide();
 
                 if(provinciaSeleccionada)
                 {
-                    //vacio las opciones que tiene el select.
                     this.localidadesDisponibles([]);
                     this.sucursalesAndreaniDisponibles([]);
                     $('#andreanisucursal-localidad').hide();
                     $('#andreanisucursal-sucursal').hide();
                     $('.retiro-sucursal-row').addClass('andreani-loader');
 
-                    $.ajax('/andreani/localidad/index',
+                    $.ajax(this.baseUrl + 'andreani/localidad/index',
                     {
                         type    : 'post',
                         context : this,
@@ -370,8 +358,6 @@ define(
                         },
                         success : function (response)
                         {
-                            //console.log(response);
-
                             for(var i = 0; i < response.length; i++)
                             {
                                 this.localidadesDisponibles.push(response[i]);
@@ -391,18 +377,16 @@ define(
             {
                 $('.localidad-sin-sucursales').hide();
                 $('#andreanisucursal-sucursal').val('').hide();
-                $('#shipping-method-buttons-container').hide();
 
                 if(this.provinciaSeleccionada() && this.localidadSeleccionada())
                 {
                     var provinciaSeleccionada = $('#andreanisucursal-provincia option:selected').text();
                     var localidadSeleccionada = $('#andreanisucursal-localidad option:selected').text();
 
-                    //vacio el select de sucursales
                     this.sucursalesAndreaniDisponibles([]);
                     $('.retiro-sucursal-row').addClass('andreani-loader');
 
-                    $.ajax('/andreani/sucursal/index',
+                    $.ajax(this.baseUrl + 'andreani/sucursal/index',
                     {
                         type    : 'post',
                         context : this,
@@ -410,7 +394,6 @@ define(
                         {
                             provincia: provinciaSeleccionada,
                             localidad: localidadSeleccionada
-                            //codigoPostal: this.localidadSeleccionada()
                         },
                         success : function (response)
                         {
@@ -429,7 +412,6 @@ define(
                                 $('#andreanisucursal-sucursal').hide();
                             }
                             $('.retiro-sucursal-row').removeClass('andreani-loader');
-                            //console.log(response);
                         },
                         error   : function (e, status)
                         {
@@ -441,14 +423,11 @@ define(
             },
             cotizacionAndreaniSucursal: function ()
             {
-                $('#shipping-method-buttons-container').hide();
-
                 if(this.provinciaSeleccionada() && this.localidadSeleccionada() && this.sucursalAndreaniSeleccionada())
                 {
                     $('.retiro-sucursal-row').addClass('andreani-loader');
-                    //poner un loader cuando hace el change
 
-                    $.ajax('/andreani/webservice/cotizar',
+                    $.ajax(this.baseUrl + 'andreani/webservice/cotizar',
                     {
                         type    : 'post',
                         context : this,
@@ -464,14 +443,11 @@ define(
                              * Temporal: esto se debe cargar directamente cuando se aplica la sucursal en el controller
                              */
                             sucursalTxt : $('#andreanisucursal-sucursal option:selected').text()
-                            //codigoPostal: selectLocalidad.val()
                         },
                         success : function (response)
                         {
-                            console.log(response);
                             if(typeof response.cotizacion == 'undefined')
                             {
-                                $('#shipping-method-buttons-container').hide();
                                 $('.retiro-sucursal-row').removeClass('andreani-loader');
                                 alert('No se encontraron cotizaciones para el envío a esta sucursal. Por favor intentelo nuevamente seleccionando otra.')
                             }
@@ -479,7 +455,6 @@ define(
                             {
                                 //Ver la mejor manera de ponerle el precio
                                 $('td.andreanisucursal-price span.price').html(response.cotizacion);
-                                $('#shipping-method-buttons-container').show();
                                 $('.retiro-sucursal-row').removeClass('andreani-loader');
 
                                 $.each(this.rates(), function (index, shippingMethod)

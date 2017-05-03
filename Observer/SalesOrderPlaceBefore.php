@@ -44,6 +44,8 @@ class SalesOrderPlaceBefore implements ObserverInterface
         $codigoSucursalAndreani = $this->_checkoutSession->getCodigoSucursalAndreani();
         $customer               = $this->_customerSession->getCustomer();
         $order                  = $observer->getEvent()->getOrder();
+        $shippingAddress        = $order->getShippingAddress();
+        $billingAddress         = $order->getBillingAddress();
 
         $metodoEnvio = explode('_',$order->getShippingMethod());
 
@@ -52,7 +54,30 @@ class SalesOrderPlaceBefore implements ObserverInterface
             $order->setCodigoSucursalAndreani($codigoSucursalAndreani);
         }
 
-        $order->setCustomerDni($customer->getDni());
+        /**
+         * Parche para hacer que se guarde la altura, piso, departamento, dni, celular y observaciones en el billing
+         * cuando el usuario es invitado. Esto funciona haciendo que la direccion de envio y facturacion sean las mismas,
+         * ya que sino los datos no coinciden.
+         */
+        $billingAddress
+            ->setFirstname($shippingAddress->getFirstname())
+            ->setLastname($shippingAddress->getLastname())
+            ->setCompany($shippingAddress->getCompany())
+            ->setCity($shippingAddress->getCity())
+            ->setRegionId($shippingAddress->getRegionId())
+            ->setRegion($shippingAddress->getRegion())
+            ->setPostcode($shippingAddress->getPostcode())
+            ->setCountryId($shippingAddress->getCountryId())
+            ->setTelephone($shippingAddress->getTelephone())
+            ->setDni($shippingAddress->getDni())
+            ->setAltura($shippingAddress->getAltura())
+            ->setPiso($shippingAddress->getPiso())
+            ->setDepartamento($shippingAddress->getDepartamento())
+            ->setObservaciones($shippingAddress->getObservaciones())
+            ->setCelular($shippingAddress->getCelular())
+            ->save();
+
+        $order->setCustomerDni($shippingAddress->getDni());
 
         return $this;
     }

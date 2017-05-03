@@ -47,7 +47,7 @@ define([
             $('.table-checkout-shipping-method').find('input[type="radio"]')
                 .each(function(){
                     $(this).prop('checked', false);
-            });
+                });
         },
 
         editAddress: function() {
@@ -57,6 +57,24 @@ define([
         },
         showPopup: function() {
             $('[data-open-modal="opc-new-shipping-address"]').trigger('click');
+        },
+        getAltura: function () {
+            if(typeof(this.address()) != "undefined" && typeof(this.address().customAttributes) != "undefined" &&  typeof(this.address().customAttributes.altura) != "undefined")
+                return this.address().customAttributes.altura.value;
+            else
+                return '';
+        },
+        getPiso: function () {
+            if(typeof(this.address()) != "undefined" && typeof(this.address().customAttributes) != "undefined" && typeof(this.address().customAttributes.piso) != "undefined")
+                return ', Piso: '+ this.address().customAttributes.piso.value;
+            else
+                return '';
+        },
+        getDepartamento: function () {
+            if(typeof(this.address()) != "undefined" && typeof(this.address().customAttributes) != "undefined" && typeof(this.address().customAttributes.departamento) != "undefined")
+                return ', Departamento: '+ this.address().customAttributes.departamento.value;
+            else
+                return '';
         }
     });
 });

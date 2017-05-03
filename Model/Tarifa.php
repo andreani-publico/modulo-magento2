@@ -118,7 +118,7 @@ class Tarifa extends AbstractModel
         if($peso >= $rango3 && $peso < $rango4)
         {
             $tarifa->addFieldToFilter('rango',['gteq' =>'1400']);
-            $tarifa->addFieldToFilter('rango',['lt' =>'1400']);
+            $tarifa->addFieldToFilter('rango',['lt' =>'1920']);
         }
 
         if($peso >= $rango4 && $peso < $rango5)
@@ -146,6 +146,8 @@ class Tarifa extends AbstractModel
         {
             $tarifa->addFieldToFilter('rango',['gteq' =>'5290']);
         }
+
+        $tarifa->getSelect()->group('c.codigo_postal');
 
         switch($params['tipo'])
         {

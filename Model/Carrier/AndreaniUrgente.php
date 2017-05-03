@@ -61,6 +61,11 @@ class AndreaniUrgente extends AbstractCarrierOnline implements CarrierInterface
     protected $_carrierParams;
 
     /**
+     * @var Result
+     */
+    protected $_result;
+
+    /**
      * AndreaniEstandar constructor.
      * @param ScopeConfigInterface $scopeConfig
      * @param ErrorFactory $rateErrorFactory
@@ -170,12 +175,25 @@ class AndreaniUrgente extends AbstractCarrierOnline implements CarrierInterface
         $webservice = $this->_webService;
 
         $volumen = 0;
+        $valorProductos = 0;
 
         foreach($request->getAllItems() as $_item)
         {
+            if($_item->getProductType() == 'configurable')
+                continue;
+
             $_producto = $_item->getProduct();
+
+            if($_item->getParentItem())
+                $_item = $_item->getParentItem();
+
             $volumen += (int) $_producto->getResource()
                     ->getAttributeRawValue($_producto->getId(),'volumen',$_producto->getStoreId()) * $_item->getQty();
+
+            if($_producto->getCost())
+                $valorProductos += $_producto->getCost() * $_item->getQty();
+            else
+                $valorProductos += $_item->getPrice() * $_item->getQty();
         }
 
         //if($helper->getUnidadMedida() == $helper::MEDIDA_KILOS)
@@ -187,44 +205,64 @@ class AndreaniUrgente extends AbstractCarrierOnline implements CarrierInterface
         $pesoTotal  = $request->getPackageWeight() * 1000;
         $costoEnvio = false;
 
-        if($helper->getTipoCotizacion() == $helper::COTIZACION_ONLINE)
+        if($pesoTotal > (int)$helper->getPesoMaximo())
         {
-            $costoEnvio = $webservice->cotizarEnvio(
-                [
-                    'cpDestino'     => $request->getDestPostcode(),
-                    'peso'          => $pesoTotal,
-                    'valorDeclarado'=> $request->getPackageValueWithDiscount(),
-                    'volumen'       => $volumen
-                ],$this->_code);
-        }
-        elseif($helper->getTipoCotizacion() == $helper::COTIZACION_TABLA)
-        {
-            /** @var $tarifa \Ids\Andreani\Model\Tarifa */
-            $tarifa = $this->_tarifaFactory->create();
+            $error = $this->_rateErrorFactory->create();
+            $error->setCarrier($this->_code);
+            $error->setCarrierTitle($this->getConfigData('title'));
+            $error->setErrorMessage(__('Su pedido supera el peso máximo permitido por Andreani. Por favor divida su orden en más pedidos o consulte al administrador de la tienda.'));
 
-            $costoEnvio = $tarifa->cotizarEnvio(
-                [
-                    'cpDestino'     => $request->getDestPostcode(),
-                    'peso'          => $pesoTotal,
-                    'tipo'          => $this->_code
-                ]);
+            return $error;
         }
 
-        if($costoEnvio)
+        if($request->getFreeShipping() === true)
         {
-            $method->setPrice($costoEnvio);
-            $method->setCost($costoEnvio);
+            $method->setPrice(0);
+            $method->setCost(0);
 
             $result->append($method);
         }
         else
         {
-            $error = $this->_rateErrorFactory->create();
-            $error->setCarrier($this->_code);
-            $error->setCarrierTitle($this->getConfigData('title'));
-            $error->setErrorMessage('No existen cotizaciones para el código postal ingresado');
+            if($helper->getTipoCotizacion() == $helper::COTIZACION_ONLINE)
+            {
+                $costoEnvio = $webservice->cotizarEnvio(
+                    [
+                        'cpDestino'     => $request->getDestPostcode(),
+                        'peso'          => $pesoTotal,
+                        'valorDeclarado'=> $valorProductos,
+                        'volumen'       => $volumen
+                    ],$this->_code);
+            }
+            elseif($helper->getTipoCotizacion() == $helper::COTIZACION_TABLA)
+            {
+                /** @var $tarifa \Ids\Andreani\Model\Tarifa */
+                $tarifa = $this->_tarifaFactory->create();
 
-            $result->append($error);
+                $costoEnvio = $tarifa->cotizarEnvio(
+                    [
+                        'cpDestino'     => $request->getDestPostcode(),
+                        'peso'          => $pesoTotal,
+                        'tipo'          => $this->_code
+                    ]);
+            }
+
+            if($costoEnvio)
+            {
+                $method->setPrice($costoEnvio);
+                $method->setCost($costoEnvio);
+
+                $result->append($method);
+            }
+            else
+            {
+                $error = $this->_rateErrorFactory->create();
+                $error->setCarrier($this->_code);
+                $error->setCarrierTitle($this->getConfigData('title'));
+                $error->setErrorMessage('No existen cotizaciones para el código postal ingresado');
+
+                $result->append($error);
+            }
         }
 
         return $result;
@@ -252,12 +290,12 @@ class AndreaniUrgente extends AbstractCarrierOnline implements CarrierInterface
 
         $volumen        = 0;
         $productName    = '';
+
         foreach($request->getPackageItems() as $_item)
         {
             $_producto      = $helper->getLoadProduct($_item['product_id']);
             $volumen        += (int) $_producto->getResource()->getAttributeRawValue($_producto->getId(),'volumen',$_producto->getStoreId()) * $_item['qty'];
             $productName    .= $_item['name'].', ';
-
         }
 
         $productName    = rtrim(trim($productName),",");
@@ -289,6 +327,7 @@ class AndreaniUrgente extends AbstractCarrierOnline implements CarrierInterface
         $carrierParams['idcliente']                     = '';
         $carrierParams['sucursalderetiro']              = $order->getCodigoSucursalAndreani()? $order->getCodigoSucursalAndreani() : '';
         $carrierParams['sucursaldelcliente']            = '';
+        $carrierParams['increment_id']                  = $order->getIncrementId();
 
         $dataGuia = $webservice->GenerarEnviosDeEntregaYRetiroConDatosDeImpresion($carrierParams,$this->_code);
         $response = [];
@@ -373,7 +412,6 @@ class AndreaniUrgente extends AbstractCarrierOnline implements CarrierInterface
                     } else {
                         $doValidation = false;
                     }
-                } elseif ($stockItemData->getIsQtyDecimal() && !$stockItemData->getIsDecimalDivided()) {
                     $weight = $weight * $item->getQty();
                 }
 
@@ -415,6 +453,7 @@ class AndreaniUrgente extends AbstractCarrierOnline implements CarrierInterface
             $trackings = [$trackings];
         }
 
+        $this->_getAndreaniTracking($trackings);
         return $this->_result;
     }
 
@@ -423,18 +462,39 @@ class AndreaniUrgente extends AbstractCarrierOnline implements CarrierInterface
      * @param $tracking
      * @return mixed
      */
-    protected function _getAndreaniTracking($tracking)
+    protected function _getAndreaniTracking($trackings)
     {
         $result = $this->_trackFactory->create();
-        $status = $this->_trackStatusFactory->create();
-        $status->setCarrier($this->_code);
-        $status->setCarrierTitle($this->getConfigData('title'));
-        $status->setTracking($tracking);
-        $status->setPopup(1);
-        $status->setUrl($this->_andreaniHelper->getTrackingUrl($tracking));
-        $result->append($status);
+
+        if(is_array($trackings))
+        {
+            foreach ($trackings as $tracking) {
+                $status = $this->_trackStatusFactory->create();
+                $status->setCarrier($this->getCarrierCode());
+                $status->setCarrierTitle($this->getConfigData('title'));
+                $status->setTracking($tracking);
+                $status->setPopup(1);
+                $status->setUrl(
+                    $this->_andreaniHelper->getTrackingUrl($tracking)
+                );
+                $result->append($status);
+            }
+        }
+        elseif(is_string($trackings))
+        {
+            $status = $this->_trackStatusFactory->create();
+            $status->setCarrier($this->getCarrierCode());
+            $status->setCarrierTitle($this->getConfigData('title'));
+            $status->setTracking($trackings);
+            $status->setPopup(1);
+            $status->setUrl(
+                $this->_andreaniHelper->getTrackingUrl($trackings)
+            );
+            $result->append($status);
+        }
+
         $this->_result = $result;
 
-        return $result;
+        return $this->_result;
     }
 }

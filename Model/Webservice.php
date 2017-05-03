@@ -5,6 +5,7 @@ namespace Ids\Andreani\Model;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Psr\Log\LoggerInterface;
 use Ids\Andreani\Helper\Data as AndreaniHelper;
+use Magento\Directory\Model\Region;
 use SoapClient;
 use SoapFault;
 
@@ -38,8 +39,8 @@ class Webservice extends WsseAuthHeader
     /**
      * @var
      */
-    protected $_pass; 
-    
+    protected $_pass;
+
     /**
      * @var
      */
@@ -116,15 +117,22 @@ class Webservice extends WsseAuthHeader
     protected $_dataGuia;
 
     /**
+     * @var Region
+     */
+    protected $_region;
+
+    /**
      * Webservice constructor.
      * @param AndreaniHelper $andreaniHelper
      * @param LoggerInterface $logger
      * @param CheckoutSession $checkoutSession
+     * @param Region $region
      */
     public function __construct(
         AndreaniHelper $andreaniHelper,
         LoggerInterface $logger,
-        CheckoutSession $checkoutSession
+        CheckoutSession $checkoutSession,
+        Region $region
     )
     {
         $this->_andreaniHelper      = $andreaniHelper;
@@ -137,14 +145,15 @@ class Webservice extends WsseAuthHeader
         $this->_cliente             = utf8_encode($this->_andreaniHelper->getNroCliente());
         $this->_dataGuia            = [];
         $this->_options =
-        [
-            'soap_version' => SOAP_1_2,
-            'exceptions' => true,
-            'trace' => 1,
-            'wdsl_local_copy' => true
-        ];
+            [
+                'soap_version' => SOAP_1_2,
+                'exceptions' => true,
+                'trace' => 1,
+                'wdsl_local_copy' => false
+            ];
 
         $this->_checkoutSession = $checkoutSession;
+        $this->_region = $region;
 
         parent::__construct($this->_user, $this->_pass);
     }
@@ -210,10 +219,10 @@ class Webservice extends WsseAuthHeader
                     'CPDestino'     => $params['cpDestino'],
                     'Cliente'       => $this->_cliente,
                     'Contrato'      => $this->getContrato($carrier),
-                    'Peso'          => "{$params['peso']}",
+                    'Peso'          => intval($params['peso']),
                     'SucursalRetiro'=> $params['sucursalRetiro'],
-                    'ValorDeclarado'=> "{$params['valorDeclarado']}",
-                    'Volumen'       => "{$params['volumen']}",
+                    'ValorDeclarado'=> intval($params['valorDeclarado']),
+                    'Volumen'       => intval($params['volumen']),
                 ]
             ]);
 
@@ -222,7 +231,10 @@ class Webservice extends WsseAuthHeader
             return $costoEnvio;
 
         } catch (SoapFault $e) {
-            $helper->log($e,'andreani_webservice.log');
+            if($helper->getDebugHabilitado())
+                $helper->log($e,'erorres_andreani_webservice_'.date('Y_m').'.log');
+            else
+                $helper->log($e->getMessage(),'erorres_andreani_webservice_'.date('Y_m').'.log');
         }
     }
 
@@ -267,11 +279,15 @@ class Webservice extends WsseAuthHeader
             $this->_options['soap_version'] = constant($soapVersion);
             $client = new SoapClient($urlGenerarEnvio, $this->_options);
             $client->__setSoapHeaders([$this]);
+
+            $provincia = $this->_region->loadByCode($params['provincia'],'AR');
+            $params['provincia'] = $provincia->hasData() ? $provincia->getName() : $params['provincia'];
+
             $phpresponse = $client->GenerarEnviosDeEntregaYRetiroConDatosDeImpresion(
                 [
                     'parametros'   =>
                         [
-                            'Provincia'                     => $params['provincia']  ,
+                            'Provincia'                     => $params['provincia'],
                             'Localidad'                     => $params['localidad'],
                             'CodigoPostal'                  => $params['codigopostal'],
                             'Calle'                         => $params['calle'],
@@ -296,8 +312,7 @@ class Webservice extends WsseAuthHeader
                             'Contrato'                      => $contrato,
                             'IdCliente'                     => $params['idcliente'],
                             'SucursalDeRetiro'              => $params['sucursalderetiro'],
-                            'SucursalDelCliente'            => $params['sucursaldelcliente']
-
+                            'NumeroTransaccion'             => $params['increment_id']
                         ]
                 ]);
 
@@ -305,15 +320,25 @@ class Webservice extends WsseAuthHeader
             {
                 $dataGuia['datosguia'] 		= $phpresponse;
                 $dataGuia['lastrequest'] 	= $params;
+
+                if($helper->getDebugHabilitado())
+                {
+                    $helper->log(print_r($params,true),'generacion_guia_andreani_'.date('Y_m').'.log');
+                    $helper->log(print_r($phpresponse,true),'generacion_guia_andreani_'.date('Y_m').'.log');
+                }
+
                 return $dataGuia;
             }
             else
             {
                 return $phpresponse->GenerarEnviosDeEntregaYRetiroConDatosDeImpresionResult->CodigoDeResultado;
             }
-            
-        } catch (SoapFault $e) {
-            $helper->log($e,'andreani_webservice.log');
+
+        } catch (SoapFault $e){
+            if($helper->getDebugHabilitado())
+                $helper->log($e,'erorres_andreani_webservice_'.date('Y_m').'.log');
+            else
+                $helper->log($e->getMessage(),'erorres_andreani_webservice_'.date('Y_m').'.log');
         }
     }
 
@@ -327,7 +352,6 @@ class Webservice extends WsseAuthHeader
     {
         /** @var $helper \Ids\Andreani\Helper\Data */
         $helper     = $this->_andreaniHelper;
-//        $metodo     = $helper->getMetodo();
         $response   = [];
 
         $urlSucursales = $helper->getWSMethodUrl($helper::SUCURSALES,self::MODE_DEV);
@@ -355,86 +379,11 @@ class Webservice extends WsseAuthHeader
             return $response;
 
         } catch (SoapFault $e) {
-            $helper->log($e,'andreani_webservice.log');
+            if($helper->getDebugHabilitado())
+                $helper->log($e,'erorres_andreani_webservice_'.date('Y_m').'.log');
+            else
+                $helper->log($e->getMessage(),'erorres_andreani_webservice_'.date('Y_m').'.log');
         }
     }
-
-
-    /**
-     * Determina la menor distancia entre un array de sucursales y la direccion del cliente
-     *
-     * @param $sucursales,$direccion,$localidad,$provincia
-     * @return $sucursales
-     */
-    /*
-    public function distancematrix($sucursales,$direccion,$localidad,$provincia)
-    {
-        $helper = $this->_andreaniHelper;
-
-        try
-        {
-            $direccion_cliente  = $direccion . "+" . $localidad . "+" .  $provincia;
-
-            $distancia_final = 100000000;
-            $posicion        = "default";
-            foreach ($sucursales as $key => $sucursal) {
-                $direccion = explode(',', $sucursal->Direccion);
-                $direccion_sucursal = $direccion[0] . "+" . $direccion[2] . "+" . $direccion[3];
-
-                $originales     = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ';
-                $modificadas    = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr';
-                $direccion_cliente = utf8_decode($direccion_cliente);
-                $direccion_cliente = strtr($direccion_cliente, utf8_decode($originales), $modificadas);
-                $direccion_cliente = strtolower($direccion_cliente);
-                $direccion_cliente = utf8_encode($direccion_cliente);
-                $direccion_sucursal = utf8_decode($direccion_sucursal);
-                $direccion_sucursal = strtr($direccion_sucursal, utf8_decode($originales), $modificadas);
-                $direccion_sucursal = strtolower($direccion_sucursal);
-                $direccion_sucursal = utf8_encode($direccion_sucursal);
-
-                //$mode = "walking";
-                //$mode = "bicycling";
-                $mode = "driving";
-                $url  = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" . str_replace(" ","%20",$direccion_cliente) . "&destinations=" . str_replace(" ","%20",$direccion_sucursal) . "&mode={$mode}&language=es-ES&sensor=false";
-
-                $api  = file_get_contents($url);
-                $data = json_decode(utf8_encode($api),true);
-
-                $rows       = $data["rows"][0];
-                $elements   = $rows["elements"][0];
-
-                $distancia  = $elements["distance"]["value"];
-                $distancia_txt  = $elements["distance"]["text"];
-                $duracion       = $elements["duration"]["text"];
-
-                if ($distancia_final >= $distancia && !empty($distancia)) {
-                    $distancia_final        = $distancia;
-                    $distancia_final_txt    = $distancia_txt;
-                    $duracion_final         = $duracion;
-                    $posicion               = $key;
-                }
-            }
-
-            // Desahbiltar método sucursal en el Shipping Method
-            if($posicion === "default") {
-                $helper->log("No se encontro la sucursal.");
-                return false;
-            }
-
-            $this->_distanciaFinalTxt           = $distancia_final_txt;
-            $this->_duracionFinal               = $duracion_final;
-            if($mode=="driving") $this->_mode   = "en auto";
-
-            // Guardamos las variables en session para no tener que volver a llamar a la API de Google
-            $this->_checkoutSession->setGoogleDistance($sucursales[$posicion]);
-            $this->_checkoutSession->setDistancia($distancia_final_txt);
-            $this->_checkoutSession->setDuracion($duracion_final);
-            $this->_checkoutSession->setMode($this->_mode);
-            return $sucursales[$posicion];
-
-        } catch (SoapFault $e) {
-            $helper->log($e,'andreani_webservice.log');
-        }
-    }*/
 
 }

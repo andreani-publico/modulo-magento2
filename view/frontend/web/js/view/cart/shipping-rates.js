@@ -99,71 +99,57 @@ define(
 
                 return true;
             },
-
             getLocalidades: function ()
             {
-
                 var provinciaSeleccionada   = $('#andreanisucursal-provincia').val();
-                var localidadesDisponibles  = [];
-                var sucursalesAndreaniDisponibles = [];
                 var andreaniSucursalLocalidad = $('#andreanisucursal-localidad');
 
                 $('.localidad-sin-sucursales').hide();
-                $('#shipping-method-buttons-container').hide();
 
                 if(provinciaSeleccionada)
                 {
-                    //vacio las opciones que tiene el select.
-                    //this.localidadesDisponibles([]);
                     andreaniSucursalLocalidad.empty();
                     $('#andreanisucursal-sucursal').empty();
-                    //this.sucursalesAndreaniDisponibles([]);
                     andreaniSucursalLocalidad.hide();
                     $('#andreanisucursal-sucursal').hide();
                     $('#block-shipping').addClass('andreani-loader');
 
                     $.ajax('/andreani/localidad/index',
+                    {
+                        type    : 'post',
+                        context : this,
+                        data    :
                         {
-                            type    : 'post',
-                            context : this,
-                            data    :
+                            provincia_id: provinciaSeleccionada
+                        },
+                        success : function (response)
+                        {
+                            $('#s_method_sucursal').attr('checked',false);
+                            for(var i = 0; i < response.length; i++)
                             {
-                                provincia_id: provinciaSeleccionada
-                            },
-                            success : function (response)
-                            {
-                                $('#s_method_sucursal').attr('checked',false);
-                                for(var i = 0; i < response.length; i++)
-                                {
-                                  //  localidadesDisponibles.push(response[i]);
-                                    andreaniSucursalLocalidad.append('<option>Seleccione una localidad</option>');
-                                    andreaniSucursalLocalidad.append('<option value="'+response[i]["codigo_postal"]+'">'+response[i]["localidad"]+'</option>')
-                                    //console.log(response[i]['codigo_postal']);
-                                }
-                                andreaniSucursalLocalidad.show();
-                                $('#block-shipping').removeClass('andreani-loader');
-                            },
-                            error   : function (e, status)
-                            {
-                                alert("Se produjo un error, por favor intentelo nuevamente");
-                                $('#block-shipping').removeClass('andreani-loader');
+                                andreaniSucursalLocalidad.append('<option>Seleccione una localidad</option>');
+                                andreaniSucursalLocalidad.append('<option value="'+response[i]["codigo_postal"]+'">'+response[i]["localidad"]+'</option>')
                             }
-                        });
+                            andreaniSucursalLocalidad.show();
+                            $('#block-shipping').removeClass('andreani-loader');
+                        },
+                        error   : function (e, status)
+                        {
+                            alert("Se produjo un error, por favor intentelo nuevamente");
+                            $('#block-shipping').removeClass('andreani-loader');
+                        }
+                    });
                 }
-
             },
             getSucursales: function ()
             {
                 $('.localidad-sin-sucursales').hide();
                 $('#andreanisucursal-sucursal').val('').hide();
-                $('#shipping-method-buttons-container').hide();
 
                 var provinciaSeleccionada = $('#andreanisucursal-provincia option:selected').text();
                 var localidadSeleccionada = $('#andreanisucursal-localidad option:selected').text();
                 var andreaniSucursal      = $('#andreanisucursal-sucursal');
 
-                //vacio el select de sucursales
-                //this.sucursalesAndreaniDisponibles([]);
                 andreaniSucursal.empty();
                 $('#block-shipping').addClass('andreani-loader');
 
@@ -175,7 +161,6 @@ define(
                         {
                             provincia: provinciaSeleccionada,
                             localidad: localidadSeleccionada
-                            //codigoPostal: this.localidadSeleccionada()
                         },
                         success : function (response)
                         {
@@ -191,9 +176,7 @@ define(
                                         response[i]["Descripcion"] +
                                         ' ('+response[i]["Direccion"]+')'+
                                         '</option>'
-                                    )
-
-                                    // this.sucursalesAndreaniDisponibles.push(response[i]);
+                                    );
                                 }
                             }
                             else
@@ -215,11 +198,8 @@ define(
 
             cotizacionAndreaniSucursal: function ()
             {
-                $('#shipping-method-buttons-container').hide();
                 var sucursalAndreaniSeleccionada = $('#andreanisucursal-sucursal').val();
-               // var sucursalAndreaniSeleccionada = $('#andreanisucursal-sucursal option:selected').text();
                 $('#block-shipping').addClass('andreani-loader');
-                    //poner un loader cuando hace el change
 
                 $.ajax('/andreani/webservice/cotizar',
                     {
@@ -228,23 +208,17 @@ define(
                         data    :
                         {
                             tipo        : 'sucursal',
-                            /**
-                             * Posiblemente el quote id este de más aca... ver bien
-                             */
                             quoteId     : quote.getQuoteId(),
                             sucursalId  : sucursalAndreaniSeleccionada,
                             /**
                              * Temporal: esto se debe cargar directamente cuando se aplica la sucursal en el controller
                              */
                             sucursalTxt : $('#andreanisucursal-sucursal option:selected').text()
-                            //codigoPostal: selectLocalidad.val()
                         },
                         success : function (response)
                         {
-
                             if(typeof response.cotizacion == 'undefined')
                             {
-                                $('#shipping-method-buttons-container').hide();
                                 $('#block-shipping').removeClass('andreani-loader');
                                 alert('No se encontraron cotizaciones para el envío a esta sucursal. Por favor intentelo nuevamente seleccionando otra.')
                             }
@@ -253,7 +227,6 @@ define(
                                 $('#s_method_sucursal').attr('checked',false);
                                 //Ver la mejor manera de ponerle el precio
                                 $('div#andreanisucursal-price span.price').html(response.cotizacion);
-                                //$('#shipping-method-buttons-container').show();
                                 $('#block-shipping').removeClass('andreani-loader');
                                 $('#andreanisucursal-price').show();
 
@@ -261,7 +234,6 @@ define(
                                 this.price_incl_tax = response.cotizacion.slice(1);
                                 selectShippingMethodAction(this);
                                 checkoutData.setSelectedShippingRate(this.carrier_code + '_' + this.method_code);
-
                             }
                         },
                         error   : function (e, status)
@@ -271,10 +243,8 @@ define(
                         }
                     });
 
-
                 return false;
             }
-
         });
     }
 );

@@ -1,38 +1,33 @@
 # Módulo de envíos ANDREANI 2
 
-### Requisitos
+## Requisitos
 
 Para el correcto funcionamiento del módulo es necesario contar con:
 
 ```
-Magento version >= 2.1.0 
-Extensión WKHTMLToPDF
+Magento version >= 2.1.2 
 ```
 
-### Instalación
+## Instalación
 
-Para concretar la instalacion del módulo es necesario realizar los siguientes pasos:
-Pasos de instalación
-
-1. Instalar la extension WKHTMLToPDF mediante el composer.json de magento. Parados en el directorio root de magento, ejecutar en la terminal: 
+Para concretar la instalacion del módulo es necesario realizar los siguientes pasos. Primeramente, parados en la carpeta root del proyecto añadimos el modulo a nuestro composer.json ejecutando:
 
 ```
-composer require h4cc/wkhtmltopdf-i386 "0.12.3"
+composer require "andreani/magento2":"@dev"
 ```
 
-2. Copiar el archivo Andreani.zip del módulo en app/code/Ids y descomprimirlo ahí.
+Nos instalará la última versión del modulo.
 
-3. Parados en el directorio root de magento ejecutamos:
+Una vez actualizado nuestro repositorio composer, procedemos a activar el modulo en magento:
 
 ```
 1. php bin/magento module:enable Ids_Andreani --clear-static-content
 2. php bin/magento setup:upgrade
-3. rm -rf var/di
-4. rm -rf var/view_preprocessed
-5. php bin/magento setup:static-content:deploy
+3. rm -rf var/di var/view_preprocessed
+4. php bin/magento setup:static-content:deploy
 ```	
 
 ## Autores
 
-* **Mauro Maximiliano Martinez ** - *<mmartinez@ids.net.ar>
-* **Jhonattan Campo ** - *<jcampo@ids.net.ar>
+* Mauro Maximiliano Martinez
+* Jhonattan Campo

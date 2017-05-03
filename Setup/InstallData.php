@@ -93,87 +93,6 @@ class InstallData implements InstallDataInterface
             ]
         );
 
-        $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
-
-        $customerEntity = $customerSetup->getEavConfig()->getEntityType(Customer::ENTITY);
-        $attributeSetId = $customerEntity->getDefaultAttributeSetId();
-
-        /** @var $attributeSet AttributeSet */
-        $attributeSet = $this->attributeSetFactory->create();
-        $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
-
-        $customerSetup->addAttribute(Customer::ENTITY, 'dni',
-        [
-            'label'     => 'DNI',
-            'type'      => 'int',
-            'input'     => 'text',
-            'global'    => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
-            'visible'   => true,
-            'required'  => true,
-            'user_defined' => true,
-            'frontend_class'     => 'validate-number',
-            'validate_rules'     => 'a:2:{s:15:"max_text_length";i:14;s:15:"min_text_length";i:7;}',
-            'visible_on_front'   => true,
-            'sort_order'  => 90,
-            'position'    => 90,
-            'system'      => 0,
-        ]);
-
-        //Verifica que si existe el atributo
-
-
-
-        $attribute = $customerSetup->getEavConfig()->getAttribute(Customer::ENTITY, 'dni')
-            ->addData([
-                'attribute_set_id'   => $attributeSetId,
-                'attribute_group_id' => $attributeGroupId,
-                'used_in_forms'      =>
-                    [
-                        'customer_account_create',
-                        'customer_account_edit',
-                        'checkout_register',
-                        'adminhtml_customer'
-                    ],
-            ]);
-
-        $attribute->save();
-
-
-
-        $customerSetup->addAttribute(Customer::ENTITY, 'observaciones',
-        [
-            'type' => 'varchar',
-            'label' => 'Observaciones',
-            'input' => 'text',
-            'global'    => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
-            'visible'   => true,
-            'required'  => false,
-            'user_defined' => true,
-            'visible_on_front'   => true,
-            'sort_order'  => 1001,
-            'position'    => 1001,
-            'system'      => 0,
-        ]);
-
-        //Verifica que si existe el atributo
-
-
-
-        $attribute = $customerSetup->getEavConfig()->getAttribute(Customer::ENTITY, 'observaciones')
-            ->addData([
-                'attribute_set_id'   => $attributeSetId,
-                'attribute_group_id' => $attributeGroupId,
-                'used_in_forms'      =>
-                    [
-                        'customer_account_create',
-                        'customer_account_edit',
-                        'checkout_register',
-                        'adminhtml_customer'
-                    ],
-            ]);
-
-        $attribute->save();
-
         /**
          * Atributos customer_address
          */
@@ -3909,7 +3828,6 @@ class InstallData implements InstallDataInterface
                 ['Flores ','Av. Juan Bautista Alberdi 3138 ','1406','Tel: (011) 4613-0809 ','1','15'],
                 ['Palermo ','Bulnes 1422 ','1413','Tel: (011) 4861-7783','1','10'],
                 ['Suipacha ','Suipacha 272 ','1008','Tel: (011) 4326-5185/ 0099 ','1','12'],
-                ['Villa Pueyrredón ','Av. Mosconi 3181 ','1419','Tel: (011) 4574-5570 ','1','14'],
                 ['Burzaco ','Av. Hipólito Yrigoyen 14343 ','1852','Tel: (011) 4238-4356','2','125'],
                 ['Escobar','Belgrano 732','1625','Tel: (0348) 4422804','2','126'],
                 ['Florencio Varela ','Av. San Martín 1471 ','1888','Tel: (011) 4287-5474 ','2','5'],
@@ -3937,12 +3855,9 @@ class InstallData implements InstallDataInterface
                 ['Mercedes','Calle 29 nº 482 E/20 y 22','6600','Tel: (02324) 435217/259','2','74'],
                 ['Pergamino ','San Nicolás 13 ','2700','Tel: (02477) 431265 ','2','75'],
                 ['Pinamar','Shaw 137 (7167) ','7167','','2','121'],
-                ['San Pedro ','25 de Mayo 1085 ','2930','Tel: (03329) 423036  ','2','77'],
                 ['San Nicolás ','Italia 67 ','2900','Tel: (0336) 4450580 /4453149','2','76'],
                 ['Tandil ','San Martín 512 ','7000','Tel: (0249) 4440474 ','2','36'],
                 ['Zárate ','Justa Lima 1626 ','2800','Tel: (03487) 446 464','2','79'],
-                ['Córdoba ','Humberto Primo 317 ','5000','Tel: (0351) 4225124 /4364 /4253115 ','3','56'],
-                ['Cerro de las Rosas ','Av. Rafael Núñez 4635, Complejo Patagonia, Local 6','5009','Te: (0351) 481-6536','3','0'],
                 ['Río Cuarto ','Gral. Paz 1175 ','5800','Tel: (0358) 4642878 ','3','57'],
                 ['Río Tercero ','Vélez Sarsfield 240','5850','Tel: (03571) 426674 ','3','58'],
                 ['San Francisco ','Bv. 9 de Julio 1852 ','2400','Tel: (03564) 428886 ','3','59'],
@@ -3992,7 +3907,6 @@ class InstallData implements InstallDataInterface
         $setup->getConnection()
             ->insertArray($setup->getTable('ids_andreani_sucursal'),
                 ['nombre','direccion','codigo_postal','telefono','provincia_id','codigo_sucursal'], $infoIdsAndreniSucursal);
-
 
         $setup->endSetup();
     }
