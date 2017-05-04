@@ -29,5 +29,4 @@ Una vez actualizado nuestro repositorio composer, procedemos a activar el modulo
 
 ## Autores
 
-* Mauro Maximiliano Martinez
-* Jhonattan Campo
+* IDS Soluciones eCommerce
