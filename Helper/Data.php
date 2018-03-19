@@ -668,4 +668,25 @@ class Data extends AbstractHelper
     {
         return $this->_scopeConfig->getValue('shipping/andreani_configuracion/tracking_url').DIRECTORY_SEPARATOR.$trackingNumber;
     }
+
+    public function isActiveCalculadorPdp()
+    {
+        return $this->_scopeConfig->getValue('shipping/andreani_configuracion/calculadorpdp');
+    }
+
+
+    public function isActiveAndreaniEstandar()
+    {
+        return $this->_scopeConfig->getValue('carriers/andreaniestandar/active');
+    }
+
+    public function isActiveAndreaniUrgente()
+    {
+        return $this->_scopeConfig->getValue('carriers/andreaniurgente/active');
+    }
+
+    public function isActiveAndreaniSucursal()
+    {
+        return $this->_scopeConfig->getValue('carriers/andreanisucursal/active');
+    }
 }

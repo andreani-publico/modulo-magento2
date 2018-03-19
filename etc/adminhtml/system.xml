@@ -129,6 +129,10 @@
                     <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
                     <comment>Template Email que se usará para notificar la generación de las guía.</comment>
                 </field>
+                <field id="calculadorpdp" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Mostrar calculador en la pagina de producto</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <group id="andreani_ws_prod_urls" translate="label" type="text" sortOrder="402" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Andreani Urls WS producción</label>
                     <field id="cotizacion" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">

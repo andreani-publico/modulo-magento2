@@ -45,4 +45,9 @@ class CostoEnvio extends Template
         return $this->_registry->registry('current_product')->getFinalPrice();
     }
 
+    public function getProductId()
+    {
+        return $this->_registry->registry('current_product')->getId();
+    }
+
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+* Layout para el costo de envio en la pagina de producto
+*
+* @category    Ids
+* @package     ids_andreani
+* @author      Mauro Maximiliano Martinez <mmartinez@ids.net.ar>
+*/
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ids_Andreani::css/andreani.css"/>
+    </head>
+    <body>
+        <referenceContainer name="product.info.main">
+            <block class="Ids\Andreani\Block\Andreani" name="ids_andreani_head" template="head.phtml" cacheable="false" />
+            <container name="andreani.costo_envio" htmlTag="div" htmlClass="andreani-costo-envio" before="product.info.social" as="costo_envio" label="Costo de envío">
+                <block class="Ids\Andreani\Block\Catalog\Product\View\CostoEnvio" name="andreani.costo_envio.producto" template="catalog/product/view/costo_envio.phtml"/>
+            </container>
+        </referenceContainer>
+    </body>
+</page>
