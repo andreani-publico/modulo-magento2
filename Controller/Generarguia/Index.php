@@ -9,6 +9,7 @@ use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\TestFramework\Inspection\Exception;
 use Ids\Andreani\Helper\Data as AndreaniHelper;
 use Magento\Framework\Controller\Result\RawFactory as ResultRawFactory;
+use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\App\Response\Http\FileFactory;
 
 /**
