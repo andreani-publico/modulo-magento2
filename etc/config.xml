@@ -37,38 +37,38 @@
                 <andreani_emails_transaccionales>shipping_andreani_configuracion_andreani_emails_transaccionales</andreani_emails_transaccionales>
                 <tipo_cotizacion>webservice</tipo_cotizacion>
                 <andreani_ws_prod_urls>
-                    <cotizacion>https://www.e-andreani.com/CASAWS/eCommerce/CotizacionEnvio.svc?wsdl</cotizacion>
+                    <cotizacion>https://cotizador.andreani.com/ws?wsdl</cotizacion>
                     <cotizacion_soap_version>SOAP_1_2</cotizacion_soap_version>
                     <trazabilidad>https://www.e-andreani.com/eAndreaniWS/Service.svc?wsdl</trazabilidad>
                     <trazabilidad_soap_version>SOAP_1_2</trazabilidad_soap_version>
-                    <impresionconstancia>https://bpmwmbsrv.andreani.com:41443/ImposicionRemota?wsdl</impresionconstancia>
+                    <impresionconstancia>https://integraciones.andreani.com:5000/E-ImposicionRemota?wsdl</impresionconstancia>
                     <impresionconstancia_soap_version>SOAP_1_2</impresionconstancia_soap_version>
                     <obtenerestadodistribucion>https://www.e-andreani.com/eAndreaniWS/Service.svc?wsdl</obtenerestadodistribucion>
                     <obtenerestadodistribucion_soap_version>SOAP_1_2</obtenerestadodistribucion_soap_version>
                     <sucursales>https://sucursales.andreani.com/ws?wsdl</sucursales>
                     <sucursales_soap_version>SOAP_1_2</sucursales_soap_version>
-                    <confirmacioncompra>https://bpmwmbsrv.andreani.com:41443/ImposicionRemota?wsdl</confirmacioncompra>
+                    <confirmacioncompra>https://integraciones.andreani.com:5000/E-ImposicionRemota?wsdl</confirmacioncompra>
                     <confirmacioncompra_soap_version>SOAP_1_2</confirmacioncompra_soap_version>
-                    <generarenviosdeentregayretirocondatosdeimpresion>https://bpmwmbsrv.andreani.com:41443/DatosImpresion?wsdl</generarenviosdeentregayretirocondatosdeimpresion>
+                    <generarenviosdeentregayretirocondatosdeimpresion>https://integraciones.andreani.com:5000/DatosImpresion?wsdl</generarenviosdeentregayretirocondatosdeimpresion>
                     <generarenviosdeentregayretirocondatosdeimpresion_soap_version>SOAP_1_1</generarenviosdeentregayretirocondatosdeimpresion_soap_version>
-                    <anularenvio>https://bpmwmbsrv.andreani.com:41443/ImposicionRemota?wsdl</anularenvio>
+                    <anularenvio>https://integraciones.andreani.com:5000/E-ImposicionRemota?wsdl</anularenvio>
                     <anularenvio_soap_version>SOAP_1_2</anularenvio_soap_version></andreani_ws_prod_urls>
                 <andreani_ws_dev_urls>
                     <cotizacion>https://cotizadorpreprod.andreani.com/ws?wsdl</cotizacion>
                     <cotizacion_soap_version>SOAP_1_2</cotizacion_soap_version>
                     <trazabilidad>https://www.e-andreani.com/eAndreaniWSStaging/Service.svc?wsdl</trazabilidad>
                     <trazabilidad_soap_version>SOAP_1_2</trazabilidad_soap_version>
-                    <impresionconstancia>https://www.e-andreani.com/CASAStaging/eCommerce/ImposicionRemota.svc?wsdl</impresionconstancia>
+                    <impresionconstancia>https://integracionestest.andreani.com:4000/E-ImposicionRemota?wsdl</impresionconstancia>
                     <impresionconstancia_soap_version>SOAP_1_2</impresionconstancia_soap_version>
                     <obtenerestadodistribucion>https://www.e-andreani.com/eAndreaniWSStaging/Service.svc?wsdl</obtenerestadodistribucion>
                     <obtenerestadodistribucion_soap_version>SOAP_1_2</obtenerestadodistribucion_soap_version>
                     <sucursales>https://sucursalespreprod.andreani.com/ws?wsdl</sucursales>
                     <sucursales_soap_version>SOAP_1_2</sucursales_soap_version>
                     <confirmacioncompra_soap_version>SOAP_1_2</confirmacioncompra_soap_version>
-                    <confirmacioncompra>https://www.e-andreani.com/CASAStaging/eCommerce/ImposicionRemota.svc?wsdl</confirmacioncompra>
-                    <generarenviosdeentregayretirocondatosdeimpresion>https://bpmwmbsrvtest.andreani.com:7084/Ecommerce/DatosImpresion?wsdl</generarenviosdeentregayretirocondatosdeimpresion>
+                    <confirmacioncompra>https://integracionestest.andreani.com:4000/E-ImposicionRemota?wsdl</confirmacioncompra>
+                    <generarenviosdeentregayretirocondatosdeimpresion>https://integracionestest.andreani.com:4000/DatosImpresion?wsdl</generarenviosdeentregayretirocondatosdeimpresion>
                     <generarenviosdeentregayretirocondatosdeimpresion_soap_version>SOAP_1_1</generarenviosdeentregayretirocondatosdeimpresion_soap_version>
-                    <anularenvio>https://www.e-andreani.com/CASAStaging/eCommerce/ImposicionRemota.svc?wsdl</anularenvio>
+                    <anularenvio>https://integracionestest.andreani.com:4000/E-ImposicionRemota?wsdl</anularenvio>
                     <anularenvio_soap_version>SOAP_1_2</anularenvio_soap_version>
                 </andreani_ws_dev_urls>
             </andreani_configuracion>
