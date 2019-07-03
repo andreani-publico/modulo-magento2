@@ -231,7 +231,7 @@ class InstallData implements InstallDataInterface
                 [ 'provincia_id'=>12, 'nombre' => 'MENDOZA'],
                 [ 'provincia_id'=>13, 'nombre' => 'FORMOSA'],
                 [ 'provincia_id'=>14, 'nombre' => 'MISIONES'],
-                [ 'provincia_id'=>15, 'nombre' => 'NUEQUEN'],
+                [ 'provincia_id'=>15, 'nombre' => 'NEUQUEN'],
                 [ 'provincia_id'=>16, 'nombre' => 'RIO NEGRO'],
                 [ 'provincia_id'=>17, 'nombre' => 'SALTA'],
                 [ 'provincia_id'=>18, 'nombre' => 'SAN JUAN'],
