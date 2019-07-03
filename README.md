@@ -5,8 +5,15 @@
 Para el correcto funcionamiento del módulo es necesario contar con:
 
 ```
-Magento version >= 2.1.2 
+Magento version >= 2.1.2 y < 2.2 
 ```
+
+
+## Otras versiones de Magento
+
+  - Magento 1:  https://github.com/eandreani/magento
+  - Magento 2.2:  https://github.com/eandreani/magento-2.2
+
 
 ## Instalación
 
