@@ -11,8 +11,8 @@ Magento version >= 2.1.2 y < 2.2
 
 ## Otras versiones de Magento
 
-  - Magento 1:  https://github.com/eandreani/magento
-  - Magento 2.2:  https://github.com/eandreani/magento-2.2
+  - Magento 1:  https://github.com/andreani-publico/magento
+  - Magento 2.2:  https://github.com/andreani-publico/magento-2.2
 
 
 ## Instalación
