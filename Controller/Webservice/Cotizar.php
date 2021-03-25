@@ -179,7 +179,7 @@ class Cotizar extends Action
 
                     $costoEnvio = $ws->cotizarEnvio(
                         [
-                            'sucursalRetiro'=> $sucursalId,
+                            //'sucursalRetiro'=> $sucursalId,
                             'cpDestino'     => $sucursal->getCodigoPostal(),
                             'volumen'       => $volumenTotal,
                             'peso'          => $pesoTotal,
